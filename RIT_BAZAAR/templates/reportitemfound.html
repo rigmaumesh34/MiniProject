@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Found Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="date"], textarea, select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .email{
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 align="center">Report Found Item</h2>
+    <form action="/submit-found-item" method="post" enctype="multipart/form-data">
+        <label for="itemName">Item Name</label>
+        <input type="text" id="itemName" name="itemName" placeholder="Enter the name of the item" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="Describe the item" rows="4" required></textarea>
+
+        <label for="location">Location Found</label>
+        <input type="text" id="location" name="location" placeholder="Enter the location where the item was found" required>
+
+        <label for="dateFound">Date Found</label>
+        <input type="date" id="dateFound" name="dateFound" required>
+
+        <label for="timeFound">Time Found</label>
+        <input type="time" id="timeFound" name="timeFound" required>
+
+        <br>
+         <label for="phone number">Phone number </label>
+         <input type="text" id="phone" name="phone"  required>
+
+        <label   for="email">Email id </label>
+         <input class="email" type="email" id="email" name="email"  required>
+<br>
+<br>
+
+        
+
+        <button type="submit">Report Item</button>
+    </form>
+</div>
+
+</body>
+</html>
