@@ -16,59 +16,74 @@ class Student(models.Model):
     phone = models.CharField(max_length=15)
     department = models.CharField(max_length=3, choices=DEPARTMENT_CHOICES)
     year_of_study = models.CharField(max_length=9)  # Format: "2023-2024"
+    password=models.CharField(max_length=20,null=True)
 
     def __str__(self):
         return f"{self.name} ({self.department}, Year {self.year_of_study})"
     
 
-class Item(models.Model):
-    STATUS_CHOICES = [
-        ('available', 'Available'),
-        ('sold_out', 'Sold Out'),
-    ]
+# class Item(models.Model):
+    
+#     LIVE=1
+#     DELETE=0
+#     DELETE_CHOICES=((LIVE,'LIVE'),(DELETE,'DELETE'))
+#     name = models.CharField(max_length=255)
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     description = models.TextField()
+#     quantity = models.PositiveIntegerField()
+#     image = models.ImageField(upload_to='items/')
+#     delete_status = models.CharField(max_length=10, choices=DELETE_CHOICES, default='LIVE')
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE) # ForeignKey to Student model
+#     created_at=models.DateTimeField(auto_now_add=True)
+#     updated_at=models.DateTimeField(auto_now=True)
+#     def __str__(self):
+#         return f"{self.item_name} - {self.status}"
+    
+    
+# class Order(models.Model):
+#     LIVE=1
+#     DELETE=0
+#     DELETE_CHOICES=((LIVE,'LIVE'),(DELETE,'DELETE'))
+#     ORDER_CONFIRM=1
+#     ORDER_REJECTED=2
+#     STATUS_CHOICE=((ORDER_CONFIRM,'ORDER_CONFIRM'),(ORDER_REJECTED,"ORDER_REJECTED"))
+#     delete_status = models.CharField(max_length=10, choices=DELETE_CHOICES, default='LIVE')
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+#     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    
 
-    item_name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
-    quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='items/')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)  # ForeignKey to Student model
-    def __str__(self):
-        return f"{self.item_name} - {self.status}"
+# class LostItem(models.Model):
+#     STATUS_CHOICES = [
+#         ('found', 'Found'),
+#         ('not_found', 'Not Found'),
+#     ]
 
-class LostItem(models.Model):
-    STATUS_CHOICES = [
-        ('found', 'Found'),
-        ('not_found', 'Not Found'),
-    ]
-
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    lost_date = models.DateField()
-    lost_time = models.TimeField()
-    lost_location = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
-    image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)  # ForeignKey to Student model
-    def __str__(self):
-        return f"{self.name} - {self.status}"
+#     name = models.CharField(max_length=255)
+#     description = models.TextField()
+#     lost_date = models.DateField()
+#     lost_time = models.TimeField()
+#     lost_location = models.CharField(max_length=255)
+#     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
+#     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
+#     def __str__(self):
+#         return f"{self.name} - {self.status}"
     
 
 
-class FoundItem(models.Model):
-    STATUS_CHOICES = [
-        ('owner_verified', 'Owner Verified'),
-        ('not_verified', 'Not Verified'),
-    ]
+# class FoundItem(models.Model):
+#     STATUS_CHOICES = [
+#         ('owner_verified', 'Owner Verified'),
+#         ('not_verified', 'Not Verified'),
+#     ]
 
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    found_date = models.DateField()
-    found_time = models.TimeField()
-    found_location = models.CharField(max_length=255)
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)  # ForeignKey to Student model
+#     name = models.CharField(max_length=255)
+#     description = models.TextField()
+#     found_date = models.DateField()
+#     found_time = models.TimeField()
+#     found_location = models.CharField(max_length=255)
+#     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
     
-    def __str__(self):
-        return f"{self.name} - {self.status}"
+#     def __str__(self):
+#         return f"{self.name} - {self.status}"

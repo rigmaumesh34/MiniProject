@@ -4,6 +4,8 @@
         "ASGI",
         "reportitemfound",
         "reportitemlost",
+        "Rigma",
+        "studenthome",
         "studentlogin",
         "studentregister"
     ]
