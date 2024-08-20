@@ -1,0 +1,54 @@
+<html>
+<head>
+    <style>
+        /* Style for the navigation bar */
+nav {
+    background-color: #5cb85c; /* Green background */
+    padding: 20px 0; /* Padding for spacing */
+}
+
+/* Style for the navigation list */
+nav .pos ul {
+    list-style-type: none; /* Remove bullet points */
+    margin: 0;
+    padding: 0;
+    text-align: center; /* Center-align the list items */
+}
+
+/* Style for each list item */
+nav .pos ul li {
+    display: inline; /* Display list items in a row */
+    margin-right: 20px; /* Space between items */
+}
+
+/* Style for the links */
+nav .pos ul li a {
+    color: white; /* White text color */
+    text-decoration: none; /* Remove underline from links */
+    font-weight: lighter; /* Bold text */
+    font-size: 16px; /* Font size */
+}
+
+/* Change link color on hover */
+nav .pos ul li a:hover {
+    color: #e0e0e0; /* Light grey color on hover */
+}
+
+    </style>
+</head>
+<nav>
+    
+    <div class="pos">
+    <ul>
+        <li><a href="{% url 'studenthome' %}">HOME</a></li>
+        <li><a href="{% url 'studenthome' %}">SELLITEM</a></li>
+        <li><a href="{% url 'reportitemlost' %}">REPORT ITEM LOST</a></li>
+        <li><a href="{% url 'reportitemfound' %}">REPORT ITEM FOUND</a></li>
+        <li><a href="{% url 'events' %}">EVENTS</a></li>
+
+        <li><a href="studentlogout">LOGOUT</a></li>
+        
+    </ul>
+</div>
+</nav>
+</html>

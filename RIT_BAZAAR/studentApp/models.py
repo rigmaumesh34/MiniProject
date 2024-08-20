@@ -1,5 +1,6 @@
+from datetime import timezone
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.    
 class Student(models.Model):
     DEPARTMENT_CHOICES = [
@@ -10,16 +11,23 @@ class Student(models.Model):
         ('EE', 'Electrical Engineering'),
         # Add more departments as needed
     ]
-
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15)
-    department = models.CharField(max_length=3, choices=DEPARTMENT_CHOICES)
-    year_of_study = models.CharField(max_length=9)  # Format: "2023-2024"
+    LIVE=1
+    DELETE=0
+    DELETE_CHOICES = [(LIVE,'live'),(DELETE,'delete')]
+    name = models.CharField(max_length=20)
+    email = models.EmailField(blank=False, null=False)
     password=models.CharField(max_length=20,null=True)
-
+    user=models.OneToOneField(User,related_name='student_profile',on_delete=models.CASCADE)
+    phone = models.CharField(max_length=15)
+    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
+    yearofstudy = models.CharField(max_length=15)  # Format: "2023-2024"
+    password=models.CharField(max_length=20,null=True)
+    delete_status=models.IntegerField(choices=DELETE_CHOICES,default=1)
+    
     def __str__(self):
         return f"{self.name} ({self.department}, Year {self.year_of_study})"
+    
+
     
 
 # class Item(models.Model):

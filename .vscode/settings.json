@@ -7,6 +7,8 @@
         "Rigma",
         "studenthome",
         "studentlogin",
-        "studentregister"
+        "studentlogout",
+        "studentregister",
+        "yearofstudy"
     ]
 }
