@@ -1,1 +1,67 @@
-<a href="{% url 'logout' %}">Logout</a>
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIT BAZAR</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to RIT BAZAR</h1>
+        <nav>
+            <ul>
+                <li><a href="#view-events">View Events</a></li>
+                <li><a href="#sell-item">Sell Item</a></li>
+                <li><a href="#buy-item">Buy Item</a></li>
+                <li><a href="#report-found">Report Found Item</a></li>
+                <li><a href="#report-lost">Report Lost Item</a></li>
+                <li><a href="#contact-admin">Contact Admin</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="view-events">
+        <h2>View Events</h2>
+        <p>Stay updated with the latest events happening in our college.</p>
+        <button>View Events</button>
+    </section>
+
+    <section id="sell-item">
+        <h2>Sell Item</h2>
+        <p>Have something to sell? List it here and find a buyer.</p>
+        <button>Sell an Item</button>
+    </section>
+
+    <section id="buy-item">
+        <h2>Buy Item</h2>
+        <p>Looking for something? Browse through the items available for sale.</p>
+        <button>Buy an Item</button>
+    </section>
+
+    <section id="report-found">
+        <h2>Report Found Item</h2>
+        <p>Found something? Help it get back to its owner.</p>
+        <button>Report Found Item</button>
+    </section>
+
+    <section id="report-lost">
+        <h2>Report Lost Item</h2>
+        <p>Lost something? Report it here and we'll help you find it.</p>
+        <button>Report Lost Item</button>
+    </section>
+
+    <section id="contact-admin">
+        <h2>Contact Admin</h2>
+        <p>Have questions or need assistance? Contact the admin here.</p>
+        <button>Contact Admin</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 RIT BAZAR. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
