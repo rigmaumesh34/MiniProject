@@ -1,3 +1,19 @@
+/* Import a Google Font 
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');*/
+
+.stylish-font {
+    font-family: 'Pacifico', cursive; /* Custom stylish font */
+    font-size: 36px;                  /* Adjust the size */
+    font-weight: bold;                /* Make the text bold */
+    color: #4CAF50;                   /* Text color (green) */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    letter-spacing: 2px;              /* Space between letters */
+    background-color: #f0f0f0;        /* Light background color */
+    padding: 10px;                    /* Space around the text */
+    border-radius: 8px;               /* Rounded corners */
+    display: inline-block;            /* Shrink-wrap to text size */
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #e6f2e6; /* Light green background */

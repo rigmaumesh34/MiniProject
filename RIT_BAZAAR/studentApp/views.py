@@ -47,7 +47,7 @@ def studentlogin(request):
         
         
 def studenthome(request):
-    return render(request, 'studenthome.html')
+    return render(request, 'studenthome.html',{'username': request.user.username})
 
 def additem(request):
     return render(request,'additem.html')

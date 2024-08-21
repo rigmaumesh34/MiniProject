@@ -10,26 +10,19 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to RIT BAZAR</h1>
+        <h2>Hello  {{ username }} Welcome to RIT BAZAR</h2>
         <nav>
             <ul>
                 <li><a href="#view-events">View Events</a></li>
-                <li><a href="#sell-item">Sell Item</a></li>
-                <li><a href="#buy-item">Buy Item</a></li>
-                <li><a href="#report-found">Report Found Item</a></li>
-                <li><a href="#report-lost">Report Lost Item</a></li>
-                <li><a href="#contact-admin">Contact Admin</a></li>
+                <li><a href="#report-found">View Found Item</a></li>
+                <li><a href="#report-lost">View Lost Item</a></li>
+                <li><a href="">Change Password</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
         </nav>
     </header>
 
-    <section id="view-events">
-        <h2>View Events</h2>
-        <p>Stay updated with the latest events happening in our college.</p>
-        <button>View Events</button>
-    </section>
-
+    
     <section id="sell-item">
         <h2>Sell Item</h2>
         <p>Have something to sell? List it here and find a buyer.</p>
@@ -60,8 +53,6 @@
         <button>Contact Admin</button>
     </section>
 
-    <footer>
-        <p>&copy; 2024 RIT BAZAR. All Rights Reserved.</p>
-    </footer>
+
 </body>
 </html>

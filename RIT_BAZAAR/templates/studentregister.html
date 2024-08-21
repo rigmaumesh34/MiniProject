@@ -10,7 +10,7 @@
 <body>
     <div class="login-container">
         <h2>Student Registration</h2>
-        <form method="POST" action="">
+        <form method="POST" action="" id="registration-form">
             {% csrf_token %}
             <div class="input-group">
                 <label for="username">Name</label>
@@ -20,11 +20,12 @@
             <div class="input-group">
                 <label for="email">Email ID</label>
                 <input type="email" id="email" name="email" required>
+                <span id="email-error" style="color: red; display: none;">Invalid email address. Please use your RIT email.</span>
             </div>
             
             <div class="input-group">
                 <label for="phone">Phone number</label>
-                <input type="number" id="phone" name="phone" required>
+                <input type="number" id="phone"  minlength="10" name="phone" required>
             </div>
 
             <div class="input-group">
@@ -32,6 +33,8 @@
                 <input type="text" id="yearofstudy" name="yearofstudy" required>
             </div>
             
+           
+
             <div class="input-group">
                 <label for="department">Select Department</label>
                 <select id="department" name="department" required>
@@ -58,5 +61,27 @@
             <a href="{% url 'studentlogin' %}">Login</a>
         </form>
     </div>
+    <script>
+    document.getElementById('registration-form').addEventListener('submit', function(event) {
+        // Get the email input value
+        var emailInput = document.getElementById('email').value;
+        
+        // Define the regex pattern for RIT email
+        var ritEmailPattern = /^[a-zA-Z0-9._%+-]+@rit\.ac\.in$/;
+        
+        // Get the error message element
+        var emailError = document.getElementById('email-error');
+        
+        // Validate the email against the pattern
+        if (!ritEmailPattern.test(emailInput)) {
+            // If invalid, prevent form submission and show error message
+            event.preventDefault();
+            emailError.style.display = 'inline';
+        } else {
+            // If valid, hide the error message
+            emailError.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

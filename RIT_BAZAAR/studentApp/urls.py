@@ -28,4 +28,12 @@ urlpatterns = [
     path('navbar/',views.navbar,name='navbar'),
     path('events/',views.navbar,name='events'),
     path('logout/',views.studentlogout,name='logout'),
+    
+
+
+
+
+
+
+
 ]
