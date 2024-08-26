@@ -11,7 +11,9 @@
     <div class="login-container">
         <h2>Student Registration</h2>
         <form method="POST" action="" id="registration-form">
-            {% csrf_token %}
+             {% csrf_token %}
+         
+
             <div class="input-group">
                 <label for="username">Name</label>
                 <input type="text" id="username" name="username" required>
@@ -30,7 +32,10 @@
 
             <div class="input-group">
                 <label for="yearofstudy">Year of study</label>
-                <input type="text" id="yearofstudy" name="yearofstudy" required>
+                <input type="number" id="yearofstudy"  minlength="1" name="yearofstudy" required>
+                <span id="year-error" style="color: red; display: none;">Invalid year of study for selected department.</span>  
+ 
+               </select>
             </div>
             
            
@@ -39,14 +44,18 @@
                 <label for="department">Select Department</label>
                 <select id="department" name="department" required>
                     <option value="" disabled selected>Select your department</option>
-                    <option value="electrical">Electrical Engineering</option>
+                    <option value="electrical">Electrical & Electronics Engineering</option>
                     <option value="mechanical">Mechanical Engineering</option>
                     <option value="computer-science">Computer Science</option>
                     <option value="electronics-communication">Electronics and Communication</option>
-                    <option value="m-tech">M.Tech</option>
-                    <option value="mca">MCA</option>
+                    <option value="electronics-communication">Mechanical Engineering</option>
+                    <option value="electronics-communication">Robotics and AI</option>
                     <option value="civil">Civil Engineering</option>
                     <option value="b-arch">B.Arch</option>
+                    <option value="m-tech">M.Tech</option>
+                    <option value="mca">MCA</option>
+         
+                   
                 </select>
             </div>
             
@@ -55,33 +64,70 @@
                 <input type="password" id="password" name="password" required>
             </div>
             
-            <button type="submit">Register</button>
+            <button type="submit" id="registerbutton">Register</button>
             <br>
             Already have an account?
             <a href="{% url 'studentlogin' %}">Login</a>
+
         </form>
-    </div>
-    <script>
-    document.getElementById('registration-form').addEventListener('submit', function(event) {
-        // Get the email input value
-        var emailInput = document.getElementById('email').value;
+       <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const emailInput = document.getElementById("email");
+            const yearOfStudyInput = document.getElementById("yearofstudy");
+            const departmentSelect = document.getElementById("department");
+            const registerButton = document.getElementById("registerbutton");
+            const emailError = document.getElementById("email-error");
+            const yearError = document.getElementById("year-error");
         
-        // Define the regex pattern for RIT email
-        var ritEmailPattern = /^[a-zA-Z0-9._%+-]+@rit\.ac\.in$/;
+            function validateEmail() {
+                const email = emailInput.value.trim();
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@rit\.ac\.in$/;
+                if (emailPattern.test(email)) {
+                    emailError.style.display = "none";
+                    return true;
+                } else {
+                    emailError.style.display = "inline";
+                    return false;
+                }
+            }
         
-        // Get the error message element
-        var emailError = document.getElementById('email-error');
+            function validateYearOfStudy() {
+                const year = parseInt(yearOfStudyInput.value, 10);
+                const department = departmentSelect.value;
+                let valid = false;
         
-        // Validate the email against the pattern
-        if (!ritEmailPattern.test(emailInput)) {
-            // If invalid, prevent form submission and show error message
-            event.preventDefault();
-            emailError.style.display = 'inline';
-        } else {
-            // If valid, hide the error message
-            emailError.style.display = 'none';
-        }
-    });
-</script>
+                if (department === "mca" || department === "m-tech") {
+                    valid = year >= 1 && year <= 2;
+                } else if (department === "b-arch") {
+                    valid = year >= 1 && year <= 5;
+                } else {
+                    valid = year >= 1 && year <= 4;
+                }
+        
+                if (valid) {
+                    yearError.style.display = "none";
+                } else {
+                    yearError.style.display = "inline";
+                }
+        
+                return valid;
+            }
+        
+            function enableRegisterButton() {
+                const isEmailValid = validateEmail();
+                const isYearValid = validateYearOfStudy();
+                registerButton.disabled = !(isEmailValid && isYearValid);
+            }
+        
+            emailInput.addEventListener("blur", validateEmail); // Trigger email validation only when the field loses focus
+            yearOfStudyInput.addEventListener("input", enableRegisterButton);
+            departmentSelect.addEventListener("change", enableRegisterButton);
+        
+            // Initial check to disable the button on page load
+            registerButton.disabled = true;
+        });
+        
+       </script>
+  
 </body>
 </html>

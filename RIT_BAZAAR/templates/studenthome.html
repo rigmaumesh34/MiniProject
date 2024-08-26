@@ -26,7 +26,7 @@
     <section id="sell-item">
         <h2>Sell Item</h2>
         <p>Have something to sell? List it here and find a buyer.</p>
-        <button>Sell an Item</button>
+        <button onclick="redirectToAddItem()">Sell an Item</button>
     </section>
 
     <section id="buy-item">
@@ -38,13 +38,13 @@
     <section id="report-found">
         <h2>Report Found Item</h2>
         <p>Found something? Help it get back to its owner.</p>
-        <button>Report Found Item</button>
+        <button onclick="redirectToReportItemFound()">Report Found Item</button>
     </section>
 
     <section id="report-lost">
         <h2>Report Lost Item</h2>
         <p>Lost something? Report it here and we'll help you find it.</p>
-        <button>Report Lost Item</button>
+        <button onclick="redirectToReportItemLost()">Report Lost Item</button>
     </section>
 
     <section id="contact-admin">
@@ -53,6 +53,21 @@
         <button>Contact Admin</button>
     </section>
 
+
+    <script>
+        function redirectToAddItem() {
+            window.location.href = "{% url 'additem' %}";
+        }
+
+        function redirectToReportItemFound() {
+            window.location.href = "{% url 'reportitemfound' %}";
+        }
+
+        function redirectToReportItemLost() {
+            window.location.href = "{% url 'reportitemlost' %}";
+        }
+
+    </script>
 
 </body>
 </html>
