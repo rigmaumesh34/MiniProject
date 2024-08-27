@@ -32,7 +32,7 @@
     <section id="buy-item">
         <h2>Buy Item</h2>
         <p>Looking for something? Browse through the items available for sale.</p>
-        <button>Buy an Item</button>
+        <button onclick="redirectToBuyItem()">Buy an Item</button>
     </section>
 
     <section id="report-found">
@@ -57,6 +57,10 @@
     <script>
         function redirectToAddItem() {
             window.location.href = "{% url 'additem' %}";
+        }
+
+        function redirectToBuyItem() {
+            window.location.href = "{% url 'buyitem' %}";
         }
 
         function redirectToReportItemFound() {

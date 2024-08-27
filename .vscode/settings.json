@@ -2,7 +2,9 @@
     "cSpell.words": [
         "additem",
         "ASGI",
+        "buyitem",
         "itemimage",
+        "manageitem",
         "reportitemfound",
         "reportitemlost",
         "Rigma",

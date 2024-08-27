@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
 from studentApp.models import Item, Student
 from django.contrib import messages
@@ -45,8 +45,12 @@ def studentlogin(request):
 
     return render(request, 'studentlogin.html')
 
+
+
 def studenthome(request):
     return render(request, 'studenthome.html', {'username': request.user.username})
+
+
 
 def additem(request):
     if request.method == 'POST':
@@ -82,15 +86,59 @@ def additem(request):
 
     return render(request, 'additem.html')
 
+
+
+
+
+def buyitem(request):
+    
+    items = Item.objects.filter(delete_status='LIVE')
+    return render(request, 'buyitem.html', {'items': items})
+
+
+def manageitem(request):
+    # Assuming `request.user` is linked to your `Student` model
+    students = request.user.student_profile  # Assuming there is a `OneToOne` relationship between User and Student
+
+    # Retrieve all items for the logged-in student that are not deleted
+    items = Item.objects.filter(student=students, delete_status='LIVE')
+
+    context = {
+        'items': items
+    }
+    return render(request, 'manageitem.html', context)
+
+
+
+def deleteitem(request, item_id):
+    item = get_object_or_404(Item, id=item_id, student=request.user.student_profile)
+    
+    # Mark the item as deleted
+    item.delete_status = Item.DELETE
+    item.save()
+
+    messages.success(request, 'Item deleted successfully.')
+    return redirect('manageitem')
+
+
+
+
 def reportitemfound(request):
+    
     return render(request, 'reportitemfound.html')
+
+
 
 def reportitemlost(request):
     return render(request, 'reportitemlost.html')
 
+
+
 def studentlogout(request):
     logout(request)
     return redirect('index')
+
+
 
 def navbar(request):
     return render(request, 'navbar.html')

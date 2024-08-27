@@ -42,35 +42,23 @@ class Item(models.Model):
         return f"{self.name} ({self.price}, {self.description})"
     
     
-    
-# class Order(models.Model):
-#     LIVE=1
-#     DELETE=0
-#     DELETE_CHOICES=((LIVE,'LIVE'),(DELETE,'DELETE'))
-#     ORDER_CONFIRM=1
-#     ORDER_REJECTED=2
-#     STATUS_CHOICE=((ORDER_CONFIRM,'ORDER_CONFIRM'),(ORDER_REJECTED,"ORDER_REJECTED"))
-#     delete_status = models.CharField(max_length=10, choices=DELETE_CHOICES, default='LIVE')
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-#     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    
 
-# class LostItem(models.Model):
-#     STATUS_CHOICES = [
-#         ('found', 'Found'),
-#         ('not_found', 'Not Found'),
-#     ]
+class LostItem(models.Model):
+    STATUS_CHOICES = [
+        ('found', 'Found'),
+        ('not_found', 'Not Found'),
+    ]
 
-#     name = models.CharField(max_length=255)
-#     description = models.TextField()
-#     lost_date = models.DateField()
-#     lost_time = models.TimeField()
-#     lost_location = models.CharField(max_length=255)
-#     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
-#     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
-#     def __str__(self):
-#         return f"{self.name} - {self.status}"
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    lost_date = models.DateField()
+    lost_time = models.TimeField()
+    lost_location = models.CharField(max_length=255)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
+    image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
+    def __str__(self):
+        return f"{self.name} - {self.status}"
     
 
 

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,16 +15,50 @@
             
             <nav>
                 <ul>
-                    <li><a href="#view-events">View Events</a></li>
-                    <li><a href="#report-found">View Found Item</a></li>
-                    <li><a href="#report-lost">View Lost Item</a></li>
-                    <li><a href="">Change Password</a></li>
+                    <li><a href="{% url 'studenthome' %}">Home</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </header>
-      
+        <h2 style="color: green;">Items Available for Sale</h2>
+        <table border="1px">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Category</th>
+                    <th>Image</th>
+                    <th>Contact Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" style="width: 100px; height: auto;">
+                        {% else %}
+                        No Image Available
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>Name:</strong> {{ item.student.name }}<br>
+                        <strong>Email:</strong> {{ item.student.email }}<br>
+                        <strong>Phone:</strong> {{ item.student.phone }}
+                    </td>
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
         
         <script src="" async defer></script>
     </body>
-</html>>
+</html>

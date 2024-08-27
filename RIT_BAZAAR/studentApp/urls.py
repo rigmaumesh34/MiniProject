@@ -26,11 +26,14 @@ urlpatterns = [
     path('studentregister/',views.studentregister,name='studentregister'),
     path('studenthome/',views.studenthome,name='studenthome'),
     path('additem',views.additem,name='additem'),
+    path('buyitem',views.buyitem,name='buyitem'),
     path('reportitemfound/',views.reportitemfound,name='reportitemfound'),
     path('reportitemlost/',views.reportitemlost,name='reportitemlost'),
     path('navbar/',views.navbar,name='navbar'),
     path('events/',views.navbar,name='events'),
     path('logout/',views.studentlogout,name='logout'),
+    path('manageitem/', views.manageitem, name='manageitem'),
+    path('deleteitem/<int:item_id>/', views.deleteitem, name='deleteitem'),
     
 
 
