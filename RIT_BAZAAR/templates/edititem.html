@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item</title>
+</head>
+<body>
+
+<h2>Edit Item</h2>
+
+<form action="{% url 'edititem' item.id %}" method="post">
+    {% csrf_token %}
+    <label for="name">Item Name:</label><br>
+    <input type="text" id="name" name="name" value="{{ item.name }}"><br><br>
+    
+    <label for="price">Price:</label><br>
+    <input type="text" id="price" name="price" value="{{ item.price }}"><br><br>
+    
+    <label for="description">Description:</label><br>
+    <input type="text" id="description" name="description" value="{{ item.description }}"><br><br>
+    
+    <label for="quantity">Quantity:</label><br>
+    <input type="text" id="quantity" name="quantity" value="{{ item.quantity }}"><br><br>
+    
+    <label for="category">Category:</label><br>
+    <input type="text" id="category" name="category" value="{{ item.category }}"><br><br>
+    
+    <button type="submit">Save</button>
+</form>
+
+<a href="{% url 'manageitem' %}">Cancel</a>
+
+</body>
+</html>

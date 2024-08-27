@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
-from studentApp.models import Item, Student
+from studentApp.models import Item, Student, LostItem, FoundItem
 from django.contrib import messages
 import re  # For email validation
 from django.contrib import messages
+from django.http import JsonResponse
 
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     return render(request, 'index.html')
@@ -121,16 +123,84 @@ def deleteitem(request, item_id):
     return redirect('manageitem')
 
 
+def edititem(request, item_id):
+    item = get_object_or_404(Item, id=item_id, student=request.user.student_profile)
+    
+    if request.method == 'POST':
+        item.name = request.POST.get('name')
+        item.price = request.POST.get('price')
+        item.description = request.POST.get('description')
+        item.quantity = request.POST.get('quantity')
+        item.category = request.POST.get('category')
+        item.save()
+        return redirect('manageitem')
+    
+    return render(request, 'edititem.html', {'item': item})
 
 
 def reportitemfound(request):
+    if request.method == 'POST':
+       
+            item_name = request.POST.get('itemName')
+            description = request.POST.get('description')
+            location_found = request.POST.get('location')
+            date_found = request.POST.get('dateFound')
+            time_found = request.POST.get('timeFound')
+            
+            student = Student.objects.get(user=request.user)
+            # Create a new LostItem object and save it to the database
+            found_item = FoundItem(
+                name=item_name,
+                description=description,
+                found_location=location_found,
+                found_date=date_found,
+                found_time=time_found,
+               
+                student=student,
+                status='not_found'
+            )
+            found_item.save()
+
+            # Display success message
+            messages.success(request, 'found item reported successfully!')
+
+            return redirect('reportitemfound')  # Redirect to the same form or another page
+
     
     return render(request, 'reportitemfound.html')
 
 
 
 def reportitemlost(request):
-    return render(request, 'reportitemlost.html')
+    
+        if request.method == 'POST':
+            item_name = request.POST.get('itemName')
+            description = request.POST.get('description')
+            location_lost = request.POST.get('location')
+            date_lost = request.POST.get('dateLost')
+            time_lost = request.POST.get('timeLost')
+            item_image = request.FILES.get('itemImage')
+            student = Student.objects.get(user=request.user)
+            # Create a new LostItem object and save it to the database
+            lost_item = LostItem(
+                name=item_name,
+                description=description,
+                lost_location=location_lost,
+                lost_date=date_lost,
+                lost_time=time_lost,
+                image=item_image,
+                student=student,
+                status='not_found'
+            )
+            lost_item.save()
+
+            # Display success message
+            messages.success(request, 'Lost item reported successfully!')
+
+            return redirect('reportitemlost')  # Redirect to the same form or another page
+
+        return render(request, 'reportitemlost.html')
+    
 
 
 

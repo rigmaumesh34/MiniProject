@@ -3,6 +3,7 @@
         "additem",
         "ASGI",
         "buyitem",
+        "edititem",
         "itemimage",
         "manageitem",
         "reportitemfound",

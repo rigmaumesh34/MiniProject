@@ -59,7 +59,15 @@
 
 <div class="container">
     <h2>Report Lost Item</h2>
-    <form action="/submit-lost-item" method="post" enctype="multipart/form-data">
+    <form action="{% url 'reportitemlost' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
         <label for="itemName">Item Name</label>
         <input type="text" id="itemName" name="itemName" placeholder="Enter the name of the item" required>
 
@@ -78,16 +86,18 @@
         <label for="itemImage">Upload Image</label>
         <input type="file" id="itemImage" name="itemImage" accept="image/*">
 
-        <label for="phone number">Phone number </label>
-         <input type="text" id="phone" name="phone"  required>
-
-        <label   for="email">Email id </label>
-         <input class="email" type="email" id="email" name="email"  required>
+       
 <div style="margin-left: 450px;">
         <button  type="submit">Report Item</button>
 </div>
     </form>
 </div>
-
+<script>
+    // JavaScript to set the max date to today
+    window.onload = function() {
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById("dateLost").setAttribute('max', today);
+    };
+</script>
 </body>
 </html>

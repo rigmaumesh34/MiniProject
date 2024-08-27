@@ -34,7 +34,7 @@ urlpatterns = [
     path('logout/',views.studentlogout,name='logout'),
     path('manageitem/', views.manageitem, name='manageitem'),
     path('deleteitem/<int:item_id>/', views.deleteitem, name='deleteitem'),
-    
+    path('edititem/<int:item_id>/', views.edititem, name='edititem'),
 
 
 

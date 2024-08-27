@@ -11,7 +11,7 @@ class Student(models.Model):
     email = models.EmailField(max_length=20,unique=True)
     password=models.CharField(max_length=256,null=True)
     user=models.OneToOneField(User,related_name='student_profile',on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=10)
     department = models.CharField(max_length=50)
     yearofstudy = models.CharField(max_length=50)  # Format: "2023-2024"
     password=models.CharField(max_length=20)
@@ -58,23 +58,23 @@ class LostItem(models.Model):
     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
     def __str__(self):
-        return f"{self.name} - {self.status}"
+        return f"{self.name}  ({self.status}  {self.description}  {self.student})"
     
 
 
-# class FoundItem(models.Model):
-#     STATUS_CHOICES = [
-#         ('owner_verified', 'Owner Verified'),
-#         ('not_verified', 'Not Verified'),
-#     ]
+class FoundItem(models.Model):
+    STATUS_CHOICES = [
+        ('owner_verified', 'Owner Verified'),
+        ('not_verified', 'Not Verified'),
+    ]
 
-#     name = models.CharField(max_length=255)
-#     description = models.TextField()
-#     found_date = models.DateField()
-#     found_time = models.TimeField()
-#     found_location = models.CharField(max_length=255)
-#     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    found_date = models.DateField()
+    found_time = models.TimeField()
+    found_location = models.CharField(max_length=255)
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
     
-#     def __str__(self):
-#         return f"{self.name} - {self.status}"
+    def __str__(self):
+        return f"{self.name} ({self.description} , {self.found_location})"

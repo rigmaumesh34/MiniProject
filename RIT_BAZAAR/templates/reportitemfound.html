@@ -65,7 +65,15 @@
 
 <div class="container">
     <h2 align="center">Report Found Item</h2>
-    <form action="/submit-found-item" method="post" enctype="multipart/form-data">
+    <form action="{% url 'reportitemfound' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
         <label for="itemName">Item Name</label>
         <input type="text" id="itemName" name="itemName" placeholder="Enter the name of the item" required>
 
@@ -81,12 +89,7 @@
         <label for="timeFound">Time Found</label>
         <input type="time" id="timeFound" name="timeFound" required>
 
-        <br>
-         <label for="phone number">Phone number </label>
-         <input type="text" id="phone" name="phone"  required>
 
-        <label   for="email">Email id </label>
-         <input class="email" type="email" id="email" name="email"  required>
 <br>
 <br>
 
@@ -95,6 +98,12 @@
         <button type="submit">Report Item</button>
     </form>
 </div>
-
+<script>
+    // JavaScript to set the max date to today
+    window.onload = function() {
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById("dateFound").setAttribute('max', today);
+    };
+</script>
 </body>
 </html>

@@ -50,6 +50,7 @@
         <th>Quantity</th>
         <th>Category</th>
         <th>Action</th>
+        <th>Action</th>
     </tr>
     {% for item in items %}
     <tr>
@@ -64,7 +65,10 @@
                 <button type="submit">Delete</button>
             </form>
         </td>
-    </tr>
+       
+            <td>
+                <a href="{% url 'edititem' item.id %}"><button type="button">Edit</button></a>
+            </td>
     {% endfor %}
 </table>
 
