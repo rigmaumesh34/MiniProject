@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIT Bazaar - Manage Profile</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Manage Profile</h2>
+        <form method="POST" action="{% url 'manageprofile' %}" id="manage-profile-form">
+            {% csrf_token %}
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+            <div class="input-group">
+                <label for="username">Name</label>
+                <input type="text" id="username" name="username" value="{{ student.name }}" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="email">Email ID</label>
+                <input type="email" id="email" name="email" value="{{ student.email }}" required>
+                <span id="email-error" style="color: red; display: none;">Invalid email address. Please use your RIT email.</span>
+            </div>
+            
+            <div class="input-group">
+                <label for="phone">Phone number</label>
+                <input type="number" id="phone" name="phone" value="{{ student.phone }}" required>
+                <span id="phone-error" style="color: red; display: none;">Phone number must be exactly 10 digits.</span>
+            </div>
+
+            <div class="input-group">
+                <label for="yearofstudy">Year of study</label>
+                <input type="number" id="yearofstudy" name="yearofstudy" value="{{ student.yearofstudy }}" required>
+                <span id="year-error" style="color: red; display: none;">Invalid year of study for selected department.</span>  
+            </div>
+            
+            <div class="input-group">
+                <label for="department">Select Department</label>
+                <select id="department" name="department" required>
+                    <option value="" disabled>Select your department</option>
+                    <option value="electrical" {% if student.department == 'electrical' %}selected{% endif %}>Electrical & Electronics Engineering</option>
+                    <option value="mechanical" {% if student.department == 'mechanical' %}selected{% endif %}>Mechanical Engineering</option>
+                    <option value="computer-science" {% if student.department == 'computer-science' %}selected{% endif %}>Computer Science</option>
+                    <option value="electronics-communication" {% if student.department == 'electronics-communication' %}selected{% endif %}>Electronics and Communication</option>
+                    <option value="civil" {% if student.department == 'civil' %}selected{% endif %}>Civil Engineering</option>
+                    <option value="b-arch" {% if student.department == 'b-arch' %}selected{% endif %}>B.Arch</option>
+                    <option value="m-tech" {% if student.department == 'm-tech' %}selected{% endif %}>M.Tech</option>
+                    <option value="mca" {% if student.department == 'mca' %}selected{% endif %}>MCA</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" value={{studebt.password}} required>
+            </div>
+            
+            <button type="submit" id="savebutton">Save Changes</button>
+        </form>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const emailInput = document.getElementById("email");
+                const yearOfStudyInput = document.getElementById("yearofstudy");
+                const departmentSelect = document.getElementById("department");
+                const registerButton = document.getElementById("registerbutton");
+                const emailError = document.getElementById("email-error");
+                const yearError = document.getElementById("year-error");
+                const phoneInput = document.getElementById("phone");
+                const phoneError = document.getElementById("phone-error");
+    
+                function validateEmail() {
+                    const email = emailInput.value.trim();
+                    const emailPattern = /^[a-zA-Z0-9._%+-]+@rit\.ac\.in$/;
+                    if (emailPattern.test(email)) {
+                        emailError.style.display = "none";
+                        return true;
+                    } else {
+                        emailError.style.display = "inline";
+                        return false;
+                    }
+                }
+    
+                function validateYearOfStudy() {
+                    const year = parseInt(yearOfStudyInput.value, 10);
+                    const department = departmentSelect.value;
+                    let valid = false;
+    
+                    if (department === "mca" || department === "m-tech") {
+                        valid = year >= 1 && year <= 2;
+                    } else if (department === "b-arch") {
+                        valid = year >= 1 && year <= 5;
+                    } else {
+                        valid = year >= 1 && year <= 4;
+                    }
+    
+                    if (valid) {
+                        yearError.style.display = "none";
+                    } else {
+                        yearError.style.display = "inline";
+                    }
+    
+                    return valid;
+                }
+    
+                function validatePhone() {
+                    const phone = phoneInput.value.trim();
+                    if (phone.length === 10) {
+                        phoneError.style.display = "none";
+                        return true;
+                    } else {
+                        phoneError.style.display = "inline";
+                        return false;
+                    }
+                }
+    
+                function enableRegisterButton() {
+                    const isEmailValid = validateEmail();
+                    const isYearValid = validateYearOfStudy();
+                    const isPhoneValid = validatePhone();
+                    registerButton.disabled = !(isEmailValid && isYearValid && isPhoneValid);
+                }
+    
+                emailInput.addEventListener("blur", validateEmail); // Trigger email validation only when the field loses focus
+                yearOfStudyInput.addEventListener("input", enableRegisterButton);
+                departmentSelect.addEventListener("change", enableRegisterButton);
+                phoneInput.addEventListener("input", enableRegisterButton); // Trigger validation on input
+    
+                // Initial check to disable the button on page load
+                registerButton.disabled = true;
+            });
+           </script>
+    </div>
+</body>
+</html>

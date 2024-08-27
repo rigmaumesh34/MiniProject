@@ -204,6 +204,30 @@ def reportitemlost(request):
 
 
 
+
+
+def manageprofile(request):
+    student = Student.objects.get(email=request.user.email)  # Assuming email is unique
+
+    if request.method == 'POST':
+        # Get the updated data from the form
+        student.name = request.POST['username']
+        student.email = request.POST['email']
+        student.phone = request.POST['phone']
+        student.yearofstudy = request.POST['yearofstudy']
+        student.department = request.POST['department']
+        student.password=request.POST['password']  # Update password
+
+        # Save the updated student object to the database
+        student.save()
+
+        # Display a success message
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('manageprofile')
+
+    return render(request, 'manageprofile.html', {'student': student})
+
+
 def studentlogout(request):
     logout(request)
     return redirect('index')
