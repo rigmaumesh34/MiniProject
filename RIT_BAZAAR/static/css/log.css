@@ -1,0 +1,29 @@
+.login-container{
+    margin: auto;
+    width: 60%;
+    border: 3px solid;
+    padding: 10px;
+    text-align: center;
+    }
+h3{
+    color: green;
+}
+button{
+    background-color: rgb(162, 201, 162);
+    cursor: pointer;
+    width: 100px;
+    }
+
+.navclass{
+  
+padding : 30px;
+font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+h3, h2{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color:green;
+}
+body{
+    background-color: #e6f2e6;
+}

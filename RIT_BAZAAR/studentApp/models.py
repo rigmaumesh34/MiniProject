@@ -11,7 +11,7 @@ class Student(models.Model):
     email = models.EmailField(max_length=20,unique=True)
     password=models.CharField(max_length=256,null=True)
     user=models.OneToOneField(User,related_name='student_profile',on_delete=models.CASCADE)
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=40)
     department = models.CharField(max_length=50)
     yearofstudy = models.CharField(max_length=50)  # Format: "2023-2024"
     password=models.CharField(max_length=20)
@@ -78,3 +78,14 @@ class FoundItem(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.description} , {self.found_location})"
+
+class Events(models.Model):
+    name=models.CharField(max_length=20)
+    description=models.TextField()
+    location=models.TextField()
+    dateofevent=models.DateField()
+    timeofevent=models.TimeField()
+    image = models.ImageField(upload_to='eventimages/', blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.name}, {self.location},  {self.description} , {self.dateofevent}, {self.timeofevent}"

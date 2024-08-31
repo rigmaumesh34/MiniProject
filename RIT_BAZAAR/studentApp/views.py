@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
-from studentApp.models import Item, Student, LostItem, FoundItem
+from studentApp.models import *
 from django.contrib import messages
 import re  # For email validation
 from django.contrib import messages
@@ -32,6 +32,8 @@ def studentregister(request):
     return render(request,'studentregister.html')
 
 def studentlogin(request):
+    if request.user.is_authenticated:
+        return redirect('studenthome')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -43,14 +45,15 @@ def studentlogin(request):
             return redirect('studenthome')
         else:
             messages.error(request, 'Invalid username or password.')
-            return render(request, 'studentlogin.html')
+            return redirect('studentlogin')
 
     return render(request, 'studentlogin.html')
 
 
 
 def studenthome(request):
-    return render(request, 'studenthome.html', {'username': request.user.username})
+    if request.user.is_authenticated:
+        return render(request, 'studenthome.html', {'username': request.user.username})
 
 
 
@@ -232,7 +235,9 @@ def studentlogout(request):
     logout(request)
     return redirect('index')
 
-
+def eventss(request):
+    events = Events.objects.all()
+    return render(request, 'events.html', {'events': events})
 
 def navbar(request):
     return render(request, 'navbar.html')

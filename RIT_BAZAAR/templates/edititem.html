@@ -11,9 +11,7 @@
 
 <form action="{% url 'edititem' item.id %}" method="post">
     {% csrf_token %}
-    {% if messages %}
-    {{messages}}
-    {% endif %}
+   
     <label for="name">Item Name:</label><br>
     <input type="text" id="name" name="name" value="{{ item.name }}"><br><br>
     

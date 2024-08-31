@@ -6,10 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIT Bazaar - Manage Profile</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+<style>
+    header {
+        background-color: #004d00; /* Darker green */
+        padding: 20px;
+        text-align: center;
+        color: #ffffff;
+    }
+    
+    header h1 {
+        margin: 0;
+        font-size: 2.5em;
+    }
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    nav ul li {
+        margin: 0 15px;
+    }
+    
+    nav ul li a {
+        color: #ccffcc; /* Light green text */
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    nav ul li a:hover {
+        text-decoration: underline;
+    }
+</style>
 </head>
 <body>
+    <header>
+        <h2 style="color:white">Manage Profile</h2>
+        <nav>
+            <ul>
+                <li><a href="{% url 'studenthome' %}">Home</a></li>
+               
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                
+            </ul>
+        </nav>
+    </header>
     <div class="login-container">
-        <h2>Manage Profile</h2>
+ 
         <form method="POST" action="{% url 'manageprofile' %}" id="manage-profile-form">
             {% csrf_token %}
             {% if messages %}
@@ -78,7 +124,7 @@
     
                 function validateEmail() {
                     const email = emailInput.value.trim();
-                    const emailPattern = /^[a-zA-Z0-9._%+-]+@rit\.ac\.in$/;
+                    const emailPattern = /^[a-zA-Z0-9]+@rit\.ac\.in$/;
                     if (emailPattern.test(email)) {
                         emailError.style.display = "none";
                         return true;

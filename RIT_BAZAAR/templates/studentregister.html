@@ -5,11 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIT Bazaar - Student Registration</title>
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reg.css' %}">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Student Registration</h2>
+    <nav class="navclass">
+        RIT BAZAAR
+    </nav>
+    <hr>
+    <div class="register-container">
+        <h2 style="color:green;">Student Registration</h2>
         <form method="POST" action="" id="registration-form">
             {% csrf_token %}
          
@@ -17,25 +21,25 @@
                 <label for="username">Name</label>
                 <input type="text" id="username" name="username" required>
             </div>
-            
+            <br>
             <div class="input-group">
                 <label for="email">Email ID</label>
                 <input type="email" id="email" name="email" required>
                 <span id="email-error" style="color: red; display: none;">Invalid email address. Please use your RIT email.</span>
             </div>
-            
+            <br>
             <div class="input-group">
                 <label for="phone">Phone number</label>
                 <input type="number" id="phone" name="phone" required>
                 <span id="phone-error" style="color: red; display: none;">Phone number must be exactly 10 digits.</span>
             </div>
-
+            <br>
             <div class="input-group">
                 <label for="yearofstudy">Year of study</label>
                 <input type="number" id="yearofstudy" name="yearofstudy" required>
                 <span id="year-error" style="color: red; display: none;">Invalid year of study for selected department.</span>  
             </div>
-            
+            <br>    
             <div class="input-group">
                 <label for="department">Select Department</label>
                 <select id="department" name="department" required>
@@ -50,17 +54,17 @@
                     <option value="mca">MCA</option>
                 </select>
             </div>
-            
+            <br>
             <div class="input-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            
+            <br>
             <button type="submit" id="registerbutton">Register</button>
             <br>
-            Already have an account?
+            <h3 style="color:green;">Already have an account?
             <a href="{% url 'studentlogin' %}">Login</a>
-
+            </h3>
         </form>
        <script>
         document.addEventListener("DOMContentLoaded", function() {

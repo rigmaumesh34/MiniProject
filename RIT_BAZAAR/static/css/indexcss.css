@@ -1,0 +1,54 @@
+.navbar{
+
+float:right;
+padding : 30px;
+font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+
+}
+
+
+body{
+    background-color: #e6f2e6; 
+
+}
+
+.heading{
+    color: green;
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+h3{
+    text-align: center;
+    color: green;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+.col{
+    display: table-cell;
+    padding: 16px;
+    width: 33.33%;
+    color: green;
+    border: 4px;
+    border-radius: 5%;
+    text-align:justify;
+    flex: 1; /* Makes columns flexible */
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content inside each column */
+    justify-content: center;
+
+}
+.col-container{
+    display:table;
+    height:60%;
+   width: 100%;
+   padding: 20px;
+   align-items: center;
+   display: flex;
+   justify-content: space-around; /* Distribute space evenly between columns */
+   align-items: center; /* Center align items vertically */
+   text-align: center; /* Center align text horizontally */
+   padding: 20px;
+    
+}
