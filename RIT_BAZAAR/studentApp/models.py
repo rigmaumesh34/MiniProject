@@ -89,3 +89,11 @@ class Events(models.Model):
     
     def __str__(self):
         return f"{self.name}, {self.location},  {self.description} , {self.dateofevent}, {self.timeofevent}"
+    
+    
+    
+# class Claim(models.Model):
+#     image = models.ImageField(upload_to='claims/')
+#     description = models.TextField()
+#     phone_number = models.CharField(max_length=15) 
+#     found_item = models.ForeignKey(FoundItem, on_delete=models.CASCADE)

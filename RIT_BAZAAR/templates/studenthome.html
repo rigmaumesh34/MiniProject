@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIT BAZAR</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
 </head>
 <body>
     <header>
@@ -14,7 +15,7 @@
         <nav>
             <ul>
                 <li><a href="{% url 'events' %}">View Events</a></li>
-                <li><a href="#report-found">View Found Item</a></li>
+                <li><a href="{% url 'viewitemfound' %}">View Found Item</a></li>
                 <li><a href="#report-lost">View Lost Item</a></li>
                 <li><a href="{% url 'manageprofile' %}">Manage Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>

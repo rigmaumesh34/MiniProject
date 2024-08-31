@@ -241,3 +241,41 @@ def eventss(request):
 
 def navbar(request):
     return render(request, 'navbar.html')
+
+
+def viewitemfound(request):
+    # Retrieve all found items from the database
+    found_items = FoundItem.objects.all()
+    
+    # Pass the found items to the template context
+    context = {
+        'found_items': found_items
+    }
+    
+    # Render the 'viewevent.html' template with the context data
+    return render(request, 'viewitemfound.html', context)
+
+
+
+def claimitem(request):
+    
+
+    # if request.method == 'POST':
+    #     image = request.FILES.get('image')
+    #     description = request.POST.get('description')
+    #     phone_number = request.POST.get('phone_number')
+
+    #     # Save the claim
+    #     claim = Claim(
+    #         found_item=found_item,
+    #         image=image,
+    #         description=description,
+    #         phone_number=phone_number
+    #     )
+    #     claim.save()
+
+    #     messages.success(request, "Your claim has been submitted successfully.")
+    #     return redirect('viewfounditems')
+
+    return render(request, 'claimitem.html')
+

@@ -36,7 +36,8 @@ urlpatterns = [
     path('deleteitem/<int:item_id>/', views.deleteitem, name='deleteitem'),
     path('edititem/<int:item_id>/', views.edititem, name='edititem'),
     path('manageprofile/', views.manageprofile, name='manageprofile'),
-
+    path('viewitemfound/', views.viewitemfound, name='viewitemfound'),
+    path('claimitem/', views.claimitem, name='claimitem'),
 
 
 
