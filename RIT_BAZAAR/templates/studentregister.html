@@ -79,7 +79,7 @@
 
             function validateEmail() {
                 const email = emailInput.value.trim();
-                const emailPattern = /^[a-zA-Z0-9._%+-]+@rit\.ac\.in$/;
+                const emailPattern = /^[a-zA-Z0-9]+@rit\.ac\.in$/;
                 if (emailPattern.test(email)) {
                     emailError.style.display = "none";
                     return true;

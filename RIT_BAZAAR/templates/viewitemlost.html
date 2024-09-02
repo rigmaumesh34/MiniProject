@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Lost Items</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link to your CSS file if needed -->
+</head>
+<style>
+    body{
+        background-color:#f4f4f4;
+    }
+    header {
+        background-color: #004d00; /* Darker green */
+        padding: 20px;
+        text-align: center;
+        color: #ffffff;
+    }
+    
+    header h1 {
+        margin: 0;
+        font-size: 2.5em;
+    }
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    nav ul li {
+        margin: 0 15px;
+    }
+    
+    nav ul li a {
+        color: #ccffcc; /* Light green text */
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    nav ul li a:hover {
+        text-decoration: underline;
+    }
+    table{
+        width: 100%;
+    }
+    
+</style>
+<body>
+    <header>
+        <h2>Details of Lost Items</h2>
+        <nav>
+            <ul>
+                
+                <li><a href="{% url 'studenthome' %}">Home</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+   
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Lost Date</th>
+                <th>Lost Time</th>
+                <th>Lost Location</th>
+             
+                <th>Image</th>
+                <th>Student Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in lost_items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.lost_date }}</td>
+                <td>{{ item.lost_time }}</td>
+                <td>{{ item.lost_location }}</td>
+
+                <td>
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" width="100">
+                    {% else %}
+                        No image
+                    {% endif %}
+                </td>
+                
+                <td>
+                    <ul>
+                        <li>Email: {{ item.student.email }}</li>
+                        <li>Phone: {{ item.student.phone }}</li>
+
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

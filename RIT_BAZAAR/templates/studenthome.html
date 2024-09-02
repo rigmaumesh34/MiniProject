@@ -14,9 +14,9 @@
         <h2>Hello  {{ username }} Welcome to RIT BAZAR</h2>
         <nav>
             <ul>
-                <li><a href="{% url 'events' %}">View Events</a></li>
+                <li><a href="{% url 'events' %}">View events</a></li>
                 <li><a href="{% url 'viewitemfound' %}">View Found Item</a></li>
-                <li><a href="#report-lost">View Lost Item</a></li>
+                <li><a href="{% url 'viewitemlost' %}">View Lost Item</a></li>
                 <li><a href="{% url 'manageprofile' %}">Manage Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
@@ -51,7 +51,7 @@
     <section id="contact-admin">
         <h2>Contact Admin</h2>
         <p>Have questions or need assistance? Contact the admin here.</p>
-        <button>Contact Admin</button>
+        <button onclick="redirectToComplaintregister()">Register Complaint</button>
     </section>
 
 
@@ -70,6 +70,10 @@
 
         function redirectToReportItemLost() {
             window.location.href = "{% url 'reportitemlost' %}";
+        }
+
+        function redirectToComplaintregister() {
+            window.location.href = "{% url 'complaint' %}";
         }
 
     </script>

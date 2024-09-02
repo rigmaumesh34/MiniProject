@@ -9,18 +9,18 @@ class Student(models.Model):
     DELETE_CHOICES = [(LIVE,'live'),(DELETE,'delete')]
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=20,unique=True)
-    password=models.CharField(max_length=256,null=True)
+    password=models.CharField(max_length=25,null=True)
     user=models.OneToOneField(User,related_name='student_profile',on_delete=models.CASCADE)
     phone = models.CharField(max_length=40)
     department = models.CharField(max_length=50)
     yearofstudy = models.CharField(max_length=50)  # Format: "2023-2024"
-    password=models.CharField(max_length=20)
     delete_status=models.IntegerField(choices=DELETE_CHOICES,default=1)
     
     def __str__(self):
         return f"{self.name} ({self.department}, Year {self.yearofstudy})"
     
 
+    
     
 
 class Item(models.Model):
@@ -74,13 +74,43 @@ class FoundItem(models.Model):
     found_time = models.TimeField()
     found_location = models.CharField(max_length=255)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='found_items')  # ForeignKey to Student model
     
     def __str__(self):
         return f"{self.name} ({self.description} , {self.found_location})"
 
+
+    
+    
+class Claim(models.Model):
+    image = models.ImageField(upload_to='claims/')
+    description = models.TextField()
+    phone_number = models.CharField(max_length=15) 
+    found_item = models.ForeignKey(FoundItem, on_delete=models.CASCADE)
+    
+    
+    
+class complaints(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    description = models.TextField()
+    
+
+    def __str__(self):
+        return f'Complaint by {self.student.username} , {self.student.email}'
+    
+    
+class Profile(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    forget_password_token=models.CharField(max_length=100)
+    created_at=models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.user.username
+    
+    
 class Events(models.Model):
-    name=models.CharField(max_length=20)
+    name=models.CharField(max_length=30)
     description=models.TextField()
     location=models.TextField()
     dateofevent=models.DateField()
@@ -91,9 +121,3 @@ class Events(models.Model):
         return f"{self.name}, {self.location},  {self.description} , {self.dateofevent}, {self.timeofevent}"
     
     
-    
-# class Claim(models.Model):
-#     image = models.ImageField(upload_to='claims/')
-#     description = models.TextField()
-#     phone_number = models.CharField(max_length=15) 
-#     found_item = models.ForeignKey(FoundItem, on_delete=models.CASCADE)

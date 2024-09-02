@@ -1,6 +1,6 @@
 .register-container{
-margin: auto;
-width: 60%;
+
+width: 40%;
 border: 3px solid;
 padding: 10px;
 text-align: center;
@@ -22,4 +22,9 @@ button{
 background-color: rgb(162, 201, 162);
 cursor: pointer;
 width: 100px;
+}
+label{
+    width: 200px;
+    display: inline-block;
+    font-weight: bold;
 }

@@ -27,13 +27,14 @@ def studentregister(request):
         user = User.objects.create_user(username=username, password=password, email=email)
         student=Student(user=user,name=username, email=email, password=password, phone=phone, yearofstudy=year, department=department)
         student.save()
+        profile_obj=Profile.objects.create(user=user)
+        profile_obj.save()
         return redirect('studentlogin')
 
     return render(request,'studentregister.html')
 
 def studentlogin(request):
-    if request.user.is_authenticated:
-        return redirect('studenthome')
+  
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -235,9 +236,7 @@ def studentlogout(request):
     logout(request)
     return redirect('index')
 
-def eventss(request):
-    events = Events.objects.all()
-    return render(request, 'events.html', {'events': events})
+
 
 def navbar(request):
     return render(request, 'navbar.html')
@@ -258,24 +257,76 @@ def viewitemfound(request):
 
 
 def claimitem(request):
-    
-
-    # if request.method == 'POST':
-    #     image = request.FILES.get('image')
-    #     description = request.POST.get('description')
-    #     phone_number = request.POST.get('phone_number')
-
-    #     # Save the claim
-    #     claim = Claim(
-    #         found_item=found_item,
-    #         image=image,
-    #         description=description,
-    #         phone_number=phone_number
-    #     )
-    #     claim.save()
-
-    #     messages.success(request, "Your claim has been submitted successfully.")
-    #     return redirect('viewfounditems')
 
     return render(request, 'claimitem.html')
 
+def viewitemlost(request):
+    lost_items = LostItem.objects.select_related('student').all()
+    return render(request, 'viewitemlost.html', {'lost_items': lost_items})
+
+def complaints(request):
+    if request.method == 'POST':
+        description = request.POST['description']
+        student = request.user
+
+        complaint = complaints(student=student, description=description)
+        complaint.save()
+
+        messages.success(request, 'Your complaint has been submitted successfully.')
+        return redirect('studenthome')
+
+    return render(request, 'complaint.html')
+
+def forgetpassword(request):
+    if request.method=='POST':
+        username=request.POST.get('username')
+        if not User.objects.filter(username=username).first():
+            messages.success(request,'No user with this name')
+            return redirect('forgetpassword')
+        user_obj=User.objects.get(username=username)
+        
+    return render(request,'forgetpassword.html')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+def confirmpassword(request):
+    return render(request,'confirmpassword.html')
+
+def eventss(request):
+    events = Events.objects.all()
+    return render(request, 'events.html', {'events': events})
+
+
+def manageitemfound(request):
+   
+      # Get the Student instance associated with the logged-in user
+    student = request.user.student_profile
+
+    # Retrieve all FoundItem instances related to this Student
+    items = student.found_items.all()  # Uses the related_name 'found_items'
+
+    # Prepare context for rendering
+    context = {
+        'items': items
+    }
+    return render(request, 'manageitemfound.html', context)
+
+
+
+def deleteitemfound(request, item_id):
+
+    item = get_object_or_404(FoundItem, id=item_id, student=request.user.student_profile)
+    
+    # Mark the item as deleted
+    item.delete()
+
+    messages.success(request, 'Item deleted successfully.')
+    return redirect('manageitemfound')

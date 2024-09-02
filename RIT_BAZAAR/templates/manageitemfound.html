@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Items</title>
+    <title>View Found Items</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 20px;
+           
         }
         table {
             width: 100%;
@@ -72,9 +72,10 @@
         
     </style>
 </head>
+
 <body>
     <header>
-        <h2>Manage Your Items</h2>
+        <h2>Items Found</h2>
         <nav>
             <ul>
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
@@ -84,37 +85,44 @@
             </ul>
         </nav>
     </header>
-
-
-<table>
-    <tr>
-        <th>Item Name</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Quantity</th>
-        <th>Category</th>
-        <th>Action</th>
+   
     
-    </tr>
-    {% for item in items %}
-    <tr>
-        <td>{{ item.name }}</td>
-        <td>{{ item.price }}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.category }}</td>
-        <td>
-            <form action="{% url 'deleteitem' item.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-       
-            <td>
-                <a href="{% url 'edititem' item.id %}"><button type="button">Edit</button></a>
-            </td>
-    {% endfor %}
-</table>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Found Date</th>
+                <th>Found Time</th>
+                <th>Found Location</th>
+                <th>Action</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.found_date }}</td>
+                <td>{{ item.found_time }}</td>
+                <td>{{ item.found_location }}</td>
+               
+                <td>
+            
 
+                <form action="{% url 'deleteitemfound' item.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+
+                </td>
+
+
+            </tr>
+
+        </tbody>
+        {% endfor %}
+    </table>
 </body>
 </html>

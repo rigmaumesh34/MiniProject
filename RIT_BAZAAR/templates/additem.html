@@ -5,67 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Item for Sale</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-        }
-        form {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        input[type="text"], input[type="number"], textarea,email select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        input[type="file"] {
-            margin: 10px 0;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .email{
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .category{
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-            color: #555;
-        }
-    </style>
-    
+  <link rel="stylesheet" href="{% static 'css/generalforms.css' %}">
+ 
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <header>
-        <h2> Sell Items here</h2>
+        <h3> Sell Items here</h3>
         <nav>
             <ul>
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
@@ -86,22 +30,28 @@
 {% endif %}
 
 
-
+<div class="container">
+    <div class="form-group">
 <form action="" method="post" enctype="multipart/form-data" >
     {% csrf_token %}
+  
     <h2 align="center">Add Item </h2>
     <label for="name">Item Name</label>
     <input type="text" id="itemname" name="name" placeholder="Enter item name" required>
-
+<br>
+<br>
     <label for="description">Description</label>
     <textarea id="description" name="description" placeholder="Enter item description" rows="4" required></textarea>
-
+<br>
+<br>
     <label for="price">Price </label>
     <input type="number" id="price" name="price" placeholder="Enter price" required>
-
-    <label for="uantity">Quantity </label>
+<br>
+<br>
+    <label for="quantity">Quantity </label>
     <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
-
+<br>
+<br>
     <label for="category">Category</label>
     <select class="category" id="category" name="category"  required>
         <option value="" disabled selected>Select item type</option>
@@ -112,7 +62,7 @@
     </select>
     <br>
     <br>
-    
+   <br> 
     <label for="itemimage">Upload Image</label>
     <input type="file" id="itemimage" name="itemimage"  required>
     <br>
@@ -126,5 +76,6 @@
     <button type="submit">Submit Item</button>
 </form>
 
+</div>
 </body>
 </html>
