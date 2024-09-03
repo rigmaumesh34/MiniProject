@@ -6,7 +6,8 @@ from django.contrib import messages
 import re  # For email validation
 from django.contrib import messages
 from django.http import JsonResponse
-
+from .helpers import send_forget_password_mail
+import uuid
 from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
@@ -243,15 +244,11 @@ def navbar(request):
 
 
 def viewitemfound(request):
-    # Retrieve all found items from the database
+   
     found_items = FoundItem.objects.all()
-    
-    # Pass the found items to the template context
     context = {
         'found_items': found_items
     }
-    
-    # Render the 'viewevent.html' template with the context data
     return render(request, 'viewitemfound.html', context)
 
 
@@ -277,15 +274,86 @@ def complaints(request):
 
     return render(request, 'complaint.html')
 
+# def forgetpassword(request):
+#     if request.method=='POST':
+#         username=request.POST.get('username')
+#         if not User.objects.filter(username=username).first():
+#             messages.success(request,'No user with this name')
+#             return redirect('forgetpassword')
+#         user_obj=User.objects.get(username=username)
+#         token=str(uuid.uuid4())
+#         send_forget_password_mail(user_obj,token)
+#         messages.success(request,'An email is sent')
+#         return redirect('forgetpassword')
+#     return render(request,'forgetpassword.html')
+
+
+# def confirmpassword(request, token):
+#     profile_obj=Profile.objects.get(orget_password_token=token)
+#     return render(request,'confirmpassword.html')
+    
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.models import User
+from .models import Profile
+import uuid
+
 def forgetpassword(request):
-    if request.method=='POST':
-        username=request.POST.get('username')
-        if not User.objects.filter(username=username).first():
-            messages.success(request,'No user with this name')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        # Check if a user with the provided email exists
+        user = User.objects.filter(email=email).first()
+        if not user:
+            messages.error(request, 'No user with this email exists.')
             return redirect('forgetpassword')
-        user_obj=User.objects.get(username=username)
-        
-    return render(request,'forgetpassword.html')
+
+        try:
+            # Attempt to get the Profile object associated with the user
+            profile_obj = Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            # Handle the case where the Profile does not exist
+            messages.error(request, 'Profile for this user does not exist.')
+            return redirect('forgetpassword')
+
+        # Generate a token and save it to the profile
+        token = str(uuid.uuid4())
+        profile_obj.forget_password_token = token
+        profile_obj.save()
+
+        # Send an email with the password reset link
+        send_forget_password_mail(user, token)
+        messages.success(request, 'An email has been sent with a link to reset your password.')
+        return redirect('forgetpassword')
+
+    return render(request, 'forgetpassword.html')
+
+
+def confirmpassword(request, token):
+    try:
+        # Find the profile with the corresponding token
+        profile_obj = Profile.objects.get(forget_password_token=token)
+        user = profile_obj.user
+
+        if request.method == 'POST':
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if new_password != confirm_password:
+                messages.error(request, 'Passwords do not match.')
+                return redirect(f'/confirmpassword/{token}/')
+
+            user.set_password(new_password)
+            user.save()
+
+            messages.success(request, 'Password has been reset successfully.')
+            return redirect('studentlogin')
+
+        return render(request, 'confirmpassword.html', {'token': token})
+
+    except Profile.DoesNotExist:
+        messages.error(request, 'Invalid or expired token.')
+        return redirect('forgetpassword')
     
     
     
@@ -295,10 +363,7 @@ def forgetpassword(request):
     
     
     
-    
-    
-def confirmpassword(request):
-    return render(request,'confirmpassword.html')
+
 
 def eventss(request):
     events = Events.objects.all()
@@ -306,14 +371,8 @@ def eventss(request):
 
 
 def manageitemfound(request):
-   
-      # Get the Student instance associated with the logged-in user
     student = request.user.student_profile
-
-    # Retrieve all FoundItem instances related to this Student
-    items = student.found_items.all()  # Uses the related_name 'found_items'
-
-    # Prepare context for rendering
+    items = student.found_items.all()  
     context = {
         'items': items
     }
@@ -324,9 +383,9 @@ def manageitemfound(request):
 def deleteitemfound(request, item_id):
 
     item = get_object_or_404(FoundItem, id=item_id, student=request.user.student_profile)
-    
-    # Mark the item as deleted
     item.delete()
 
     messages.success(request, 'Item deleted successfully.')
     return redirect('manageitemfound')
+
+

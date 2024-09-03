@@ -30,7 +30,7 @@ urlpatterns = [
     path('reportitemfound/',views.reportitemfound,name='reportitemfound'),
     path('reportitemlost/',views.reportitemlost,name='reportitemlost'),
     path('navbar/',views.navbar,name='navbar'),
-    path('forgetpassword/',views.forgetpassword,name='forgetpassword'),
+    
     path('logout/',views.studentlogout,name='logout'),
     path('manageitem/', views.manageitem, name='manageitem'),
     path('deleteitem/<int:item_id>/', views.deleteitem, name='deleteitem'),
@@ -40,11 +40,13 @@ urlpatterns = [
     path('claimitem/', views.claimitem, name='claimitem'),
     path('viewitemlost/', views.viewitemlost, name='viewitemlost'),
     path('complaint/', views.complaints, name='complaint'),
-    path('confirmpassword/', views.confirmpassword, name='confirmpassword'),
+    path('forgetpassword/', views.forgetpassword, name='forgetpassword'),
+    path('confirmpassword/<str:token>/', views.confirmpassword, name='confirmpassword'),
     path('events/',views.eventss,name='events'),
     path('deleteitemfound/<int:item_id>/',views.deleteitemfound, name='deleteitemfound'),
     path('manageitemfound/',views.manageitemfound,name='manageitemfound'),
-
+    
+    
 
 
 ] 
