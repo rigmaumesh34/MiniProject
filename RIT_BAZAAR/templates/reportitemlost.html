@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Lost Item</title>
-    <link rel="stylesheet" href="{% static 'css/generalforms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reportitem.css' %}">
 </head>
 <body>
     <header>
@@ -19,7 +20,7 @@
             </ul>
         </nav>
     </header>
-<div class="container">
+<div class="register-container">
 
     <form action="{% url 'reportitemlost' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}

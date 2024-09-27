@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Found Item</title>
-    <link rel="stylesheet" href="{% static 'css/generalforms.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reportitem.css' %}">
 </head>
 <body>
     <header>
@@ -19,7 +21,7 @@
             </ul>
         </nav>
     </header>
-<div class="container">
+<div class="register-container">
 
     <form action="{% url 'reportitemfound' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -32,16 +34,16 @@
     {% endif %}
         <label for="itemName">Item Name</label>
         <input type="text" id="itemName" name="itemName" placeholder="Enter the name of the item" required>
-
+        <br>
         <label for="description">Description</label>
         <textarea id="description" name="description" placeholder="Describe the item" rows="4" ></textarea>
-
+        <br>
         <label for="location">Location Found</label>
         <input type="text" id="location" name="location" placeholder="Enter the location where the item was found" required>
-
+        <br>
         <label for="dateFound">Date Found</label>
         <input type="date" id="dateFound" name="dateFound" required>
-
+        <br>
         <label for="timeFound">Time Found</label>
         <input type="time" id="timeFound" name="timeFound" required>
 

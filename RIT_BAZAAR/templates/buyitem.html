@@ -1,64 +1,55 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    </head>
-    <body>
-     
-        <header>
-            
-            <nav>
-                <ul>
-                    <li><a href="{% url 'studenthome' %}">Home</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </nav>
-        </header>
-        <h2 style="color: green;">Items Available for Sale</h2>
-        <table border="1px" >
-            <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Category</th>
-                    <th>Image</th>
-                    <th>Contact Information</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.category }}</td>
-                    <td>
-                        {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.name }}" style="width: 100px; height: auto;">
-                        {% else %}
-                        No Image Available
-                        {% endif %}
-                    </td>
-                    <td>
-                        <strong>Name:</strong> {{ item.student.name }}<br>
-                        <strong>Email:</strong> {{ item.student.email }}<br>
-                        <strong>Phone:</strong> {{ item.student.phone }}
-                    </td>
-                </tr>
-                
-                {% endfor %}
-            </tbody>
-        </table>
-        
-        <script src="" async defer></script>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Items for Sale</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/buyitem.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'studenthome' %}">Home</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h2 style="text-align: center; color: green;">Items Available for Sale</h2>
+
+    <div class="card-container">
+        {% for item in items %}
+        <div class="card">
+            <div class="card-image">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                {% else %}
+                <div class="no-image">No Image Available</div>
+                {% endif %}
+            </div>
+            <div class="card-content">
+                <h3>{{ item.name }}</h3>
+                <p><strong>Description:</strong> {{ item.description }}</p>
+                <p><strong>Price:</strong> ₹{{ item.price }}</p>
+                <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+                <p><strong>Category:</strong> {{ item.category }}</p>
+                <div class="contact-info">
+                    <strong>Contact:</strong><br>
+                    Name: {{ item.student.name }}<br>
+                    Email: {{ item.student.email }}<br>
+                    Phone: {{ item.student.phone }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src="" async defer></script>
+</body>
 </html>

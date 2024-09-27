@@ -9,11 +9,18 @@ from django.http import JsonResponse
 from .helpers import send_forget_password_mail
 import uuid
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, redirect
+from .models import Profile
+import uuid
+
 
 def index(request):
     return render(request, 'index.html')
 
 
+
+from django.db import IntegrityError
+from django.contrib import messages
 
 def studentregister(request):
     if request.method == 'POST':
@@ -54,8 +61,8 @@ def studentlogin(request):
 
 
 def studenthome(request):
-    if request.user.is_authenticated:
-        return render(request, 'studenthome.html', {'username': request.user.username})
+   
+     return render(request, 'studenthome.html', {'username': request.user.username})
 
 
 
@@ -153,7 +160,7 @@ def reportitemfound(request):
             time_found = request.POST.get('timeFound')
             
             student = Student.objects.get(user=request.user)
-            # Create a new LostItem object and save it to the database
+          
             found_item = FoundItem(
                 name=item_name,
                 description=description,
@@ -166,10 +173,10 @@ def reportitemfound(request):
             )
             found_item.save()
 
-            # Display success message
+           
             messages.success(request, 'found item reported successfully!')
 
-            return redirect('reportitemfound')  # Redirect to the same form or another page
+            return redirect('reportitemfound') 
 
     
     return render(request, 'reportitemfound.html')
@@ -186,7 +193,7 @@ def reportitemlost(request):
             time_lost = request.POST.get('timeLost')
             item_image = request.FILES.get('itemImage')
             student = Student.objects.get(user=request.user)
-            # Create a new LostItem object and save it to the database
+           
             lost_item = LostItem(
                 name=item_name,
                 description=description,
@@ -199,10 +206,10 @@ def reportitemlost(request):
             )
             lost_item.save()
 
-            # Display success message
+           
             messages.success(request, 'Lost item reported successfully!')
 
-            return redirect('reportitemlost')  # Redirect to the same form or another page
+            return redirect('reportitemlost')  
 
         return render(request, 'reportitemlost.html')
     
@@ -292,11 +299,7 @@ def complaints(request):
 #     profile_obj=Profile.objects.get(orget_password_token=token)
 #     return render(request,'confirmpassword.html')
     
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.models import User
-from .models import Profile
-import uuid
+
 
 def forgetpassword(request):
     if request.method == 'POST':

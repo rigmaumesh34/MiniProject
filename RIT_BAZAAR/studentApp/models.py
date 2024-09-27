@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 # Create your models here.    
 class Student(models.Model):
    
-   
+  
+    
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=20,unique=True)
     password=models.CharField(max_length=25,null=True)
@@ -22,13 +23,15 @@ class Student(models.Model):
     
 
 class Item(models.Model):
-
-   
+    LIVE=1
+    DELETE=0
+    DELETE_CHOICES=((LIVE,'Live'),(DELETE,'Delete'))
     name = models.CharField(max_length=255,null=False)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='items/')
+    delete_status=models.CharField(choices=DELETE_CHOICES,default='LIVE')
     student = models.ForeignKey(Student, on_delete=models.CASCADE) # ForeignKey to Student model
     category = models.CharField(max_length=20, default='', blank=False)
 
@@ -87,6 +90,7 @@ class Claim(models.Model):
     
 class complaints(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     description = models.TextField()
     
 

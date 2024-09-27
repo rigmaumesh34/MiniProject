@@ -1,9 +1,11 @@
 .register-container{
 
-width: 40%;
+
 border: 3px solid;
 padding: 10px;
 text-align: center;
+width: 50%; 
+margin: 0 auto; 
 }
 .navclass{
   
@@ -28,3 +30,5 @@ label{
     display: inline-block;
     font-weight: bold;
 }
+
+

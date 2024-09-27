@@ -16,6 +16,17 @@
     <hr>
     <div class="register-container">
         <h2 style="color:green;">Student Registration</h2>
+
+         <!-- Message display section -->
+         {% if messages %}
+         <div class="messages">
+             {% for message in messages %}
+                 <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                     {{ message }}
+                 </div>
+             {% endfor %}
+         </div>
+         {% endif %}
         <form method="POST" action="" id="registration-form">
             {% csrf_token %}
          
@@ -68,77 +79,54 @@
             <a href="{% url 'studentlogin' %}">Login</a>
             </h3>
         </form>
-       <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const emailInput = document.getElementById("email");
-            const yearOfStudyInput = document.getElementById("yearofstudy");
-            const departmentSelect = document.getElementById("department");
-            const registerButton = document.getElementById("registerbutton");
-            const emailError = document.getElementById("email-error");
-            const yearError = document.getElementById("year-error");
-            const phoneInput = document.getElementById("phone");
-            const phoneError = document.getElementById("phone-error");
-
-            function validateEmail() {
-                const email = emailInput.value.trim();
-                const emailPattern = /^[a-zA-Z0-9]+@rit\.ac\.in$/;
-                if (emailPattern.test(email)) {
-                    emailError.style.display = "none";
-                    return true;
+        <script>
+            document.getElementById('registration-form').addEventListener('input', function() {
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const yearofstudy = parseInt(document.getElementById('yearofstudy').value, 10);
+                const department = document.getElementById('department').value;
+    
+                let valid = true;
+    
+                // Email validation
+                const emailError = document.getElementById('email-error');
+                if (email && !email.endsWith('@rit.ac.in')) {
+                    emailError.style.display = 'inline';
+                    valid = false;
                 } else {
-                    emailError.style.display = "inline";
-                    return false;
+                    emailError.style.display = 'none';
                 }
-            }
-
-            function validateYearOfStudy() {
-                const year = parseInt(yearOfStudyInput.value, 10);
-                const department = departmentSelect.value;
-                let valid = false;
-
-                if (department === "mca" || department === "m-tech") {
-                    valid = year >= 1 && year <= 2;
-                } else if (department === "b-arch") {
-                    valid = year >= 1 && year <= 5;
+    
+                // Phone number validation
+                const phoneError = document.getElementById('phone-error');
+                if (phone && phone.length !== 10) {
+                    phoneError.style.display = 'inline';
+                    valid = false;
                 } else {
-                    valid = year >= 1 && year <= 4;
+                    phoneError.style.display = 'none';
+                }
+    
+                // Year of study validation
+                const yearError = document.getElementById('year-error');
+                if (yearofstudy) {
+                    if ((department === 'mca' || department === 'm-tech') && yearofstudy > 2) {
+                        yearError.style.display = 'inline';
+                        valid = false;
+                    } else if ((department === 'electrical'||department === 'mechanical'||department === 'computer-science'||department === 'electronics-communication'||department === 'civil') && yearofstudy > 4) {
+                        yearError.style.display = 'inline';
+                        valid = false;
+                    } else if (department === 'b-arch' && yearofstudy > 5) {
+                        yearError.style.display = 'inline';
+                        valid = false;
+                    } else {
+                        
+                    }
                 }
 
-                if (valid) {
-                    yearError.style.display = "none";
-                } else {
-                    yearError.style.display = "inline";
-                }
-
-                return valid;
-            }
-
-            function validatePhone() {
-                const phone = phoneInput.value.trim();
-                if (phone.length === 10) {
-                    phoneError.style.display = "none";
-                    return true;
-                } else {
-                    phoneError.style.display = "inline";
-                    return false;
-                }
-            }
-
-            function enableRegisterButton() {
-                const isEmailValid = validateEmail();
-                const isYearValid = validateYearOfStudy();
-                const isPhoneValid = validatePhone();
-                registerButton.disabled = !(isEmailValid && isYearValid && isPhoneValid);
-            }
-
-            emailInput.addEventListener("blur", validateEmail); // Trigger email validation only when the field loses focus
-            yearOfStudyInput.addEventListener("input", enableRegisterButton);
-            departmentSelect.addEventListener("change", enableRegisterButton);
-            phoneInput.addEventListener("input", enableRegisterButton); // Trigger validation on input
-
-            // Initial check to disable the button on page load
-            registerButton.disabled = true;
-        });
-       </script>
+             
+                // Enable or disable the register button
+                document.getElementById('registerbutton').disabled = !valid;
+            });
+        </script>
 </body>
 </html>

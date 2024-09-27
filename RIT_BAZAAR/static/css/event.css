@@ -1,0 +1,92 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light grey background */
+    color: #333; /* Dark grey text */
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+header {
+    background-color: #004d00; /* Dark green background */
+    color: #ffffff; /* White text */
+    padding: 20px;
+    text-align: center;
+}
+
+header h2 {
+    margin: 0;
+    font-size: 2em;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+header nav ul li {
+    margin: 0;
+}
+
+header nav ul li a {
+    color: #ccffcc; /* Light green text */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Main Content Styles */
+main {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.event-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background-color: #ffffff; /* White background */
+    border: 1px solid #ddd; /* Light grey border */
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s ease-in-out;
+}
+
+.event-card:hover {
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+.event-card h3 {
+    margin-top: 0;
+    color: #006600; /* Dark green text */
+}
+
+.event-card p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.event-card p strong {
+    color: #004d00; /* Dark green */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .event-container {
+        grid-template-columns: 1fr;
+    }
+}

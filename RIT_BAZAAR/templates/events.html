@@ -1,11 +1,55 @@
-
-<html>
+{% load static %}
+{% comment %} <html>
     <head>
         <title>
             RIT EVENTS
         </title>
         
-    </head>
+    </head> {% endcomment %}
+
+    {% comment %} <body>
+        <header>
+            <h2>Upcoming Events</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'studenthome' %}">Home</a></li>
+                   
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    
+                </ul>
+            </nav>
+        </header>
+        {% csrf_token %}
+       
+        <table border="1px">
+            <tr>
+                <th>Event name</th>
+                <th>location</th>
+                <th>About</th>
+                <th>date</th>
+                <th>Time</th>
+               
+            </tr>  
+            {% for event in events %}
+        <tr>
+            <td>{{event.name}}</td>
+            <td>{{event.location}}</td>
+            <td>{{event.description}}</td>
+            <td>{{event.dateofevent}}</td>
+            <td>{{event.timeofevent}}</td>
+        </tr>
+        {% endfor %}
+        </table>
+
+    </body>
+</html> {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Events</title>
+    <link rel="stylesheet" href="{% static 'css/event.css' %}">
     <style>
         body{
             background-color: #f4f4f4;
@@ -48,39 +92,31 @@
         }
     
     </style>
-    <body>
-        <header>
-            <h2>Upcoming Events</h2>
-            <nav>
-                <ul>
-                    <li><a href="{% url 'studenthome' %}">Home</a></li>
-                   
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                    
-                </ul>
-            </nav>
-        </header>
-        {% csrf_token %}
-       
-        <table border="1px">
-            <tr>
-                <th>Event name</th>
-                <th>location</th>
-                <th>About</th>
-                <th>date</th>
-                <th>Time</th>
-               
-            </tr>  
-            {% for event in events %}
-        <tr>
-            <td>{{event.name}}</td>
-            <td>{{event.location}}</td>
-            <td>{{event.description}}</td>
-            <td>{{event.dateofevent}}</td>
-            <td>{{event.timeofevent}}</td>
-        </tr>
-        {% endfor %}
-        </table>
+</head>
+<body>
+    <header>
+        <h3>Upcoming Events</h3>
+        <nav>
+            <ul>
+                <li><a href="{% url 'studenthome' %}">Home</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    </body>
+    <main>
+        <div class="event-container">
+            {% csrf_token %}
+            {% for event in events %}
+            <div class="event-card">
+                <h3>{{ event.name }}</h3>
+                <p><strong>Location:</strong> {{ event.location }}</p>
+                <p><strong>About:</strong> {{ event.description }}</p>
+                <p><strong>Date:</strong> {{ event.dateofevent }}</p>
+                <p><strong>Time:</strong> {{ event.timeofevent }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
 </html>
