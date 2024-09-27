@@ -1,0 +1,124 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .complaint {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+        .complaint:last-child {
+            border-bottom: none;
+        }
+        .complaint h3 {
+            color: #444;
+        }
+        .complaint p {
+            color: #555;
+            line-height: 1.6;
+        }
+        .complaint strong {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .complaint img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+        .complaint-type {
+            background-color: #eee;
+            padding: 5px 10px;
+            display: inline-block;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .complaint-type.lf {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .complaint-type.bs {
+            background-color: #FF9800;
+            color: white;
+        }
+        .no-complaints {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #777;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'adminhome' %}">Back</a></li>
+
+                <li><a href="{% url 'adminlogout' %}">Logout</a></li>
+      
+                
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Complaints List</h1>
+
+        {% if complaints %}
+            {% for complaint in complaints %}
+                <div class="complaint">
+                    <h3>Complaint by {{ complaint.student.username }} ({{ complaint.student.email }})</h3>
+
+                    <!-- Complaint Type -->
+                    <div class="complaint-type 
+                        {% if complaint.complaint_type == 'LF' %}lf{% elif complaint.complaint_type == 'BS' %}bs{% endif %}">
+                        {% if complaint.complaint_type == 'LF' %}
+                            Lost and Found
+                        {% elif complaint.complaint_type == 'BS' %}
+                            Buy and Sell
+                        {% endif %}
+                    </div>
+
+                    <!-- Complaint Description -->
+                    <p>{{ complaint.description }}</p>
+
+                    <!-- Complaint Image, if present -->
+                    {% if complaint.image %}
+                        <strong>Attached Image:</strong>
+                        <img src="{{ complaint.image.url }}" alt="Complaint Image">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-complaints">
+                <p>No complaints available.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

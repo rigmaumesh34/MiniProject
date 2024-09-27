@@ -37,7 +37,7 @@ urlpatterns = [
     path('edititem/<int:item_id>/', views.edititem, name='edititem'),
     path('manageprofile/', views.manageprofile, name='manageprofile'),
     path('viewitemfound/', views.viewitemfound, name='viewitemfound'),
-    path('claimitem/', views.claimitem, name='claimitem'),
+    path('claimitem/<int:found_item_id>/', views.claimitem, name='claimitem'),
     path('viewitemlost/', views.viewitemlost, name='viewitemlost'),
     path('complaint/', views.complaints, name='complaint'),
     path('forgetpassword/', views.forgetpassword, name='forgetpassword'),
@@ -45,10 +45,16 @@ urlpatterns = [
     path('events/',views.eventss,name='events'),
     path('deleteitemfound/<int:item_id>/',views.deleteitemfound, name='deleteitemfound'),
     path('manageitemfound/',views.manageitemfound,name='manageitemfound'),
-    
-    
-
-
+    path('manageitemlost/',views.manageitemlost,name='manageitemlost'),
+    path('deleteitemlost/<int:item_id>/',views.deleteitemlost, name='deleteitemlost'),
+    path('adminlogin/', views.admin_login, name='adminlogin'),
+    path('adminlogout/', views.admin_logout, name='adminlogout'),
+    path('adminhome/', views.adminhome, name='adminhome'),
+    path('approve_item/<int:item_id>/', views.approve_item, name='approve_item'),
+    path('reject_item/<int:item_id>/', views.reject_item, name='reject_item'),
+    path('adminaddevent', views.admin_addevent, name='adminaddevent'),
+    path('viewcomplaints/', views.view_complaints, name='viewcomplaints'),
+    path('logout/', views.admin_logout, name='logout'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

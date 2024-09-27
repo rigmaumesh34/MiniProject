@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+   
+}
+
+h3 {
+    color: white;
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+section {
+
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 80%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+#sell-item {
+    background-image: url('https://img.freepik.com/free-vector/bright-sale-presentation-slide-template_1262-19198.jpg?w=826&t=st=1725463123~exp=1725463723~hmac=c90962e365627030ad01c254423867239d544834892a1e4ddf98c890e8672c12');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+#buy-item {
+    background-image:  url('https://www.truthmedia.gr/sites/default/files/styles/blog_704_328/public/online-shopping-ecommerce-ss-1920_1.png?itok=zZqSf5Gk');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+#report-found {
+    background-image: url('https://as2.ftcdn.net/v2/jpg/08/61/50/03/1000_F_861500332_8lOznnYHPaFh9nWyNu4oLEQUOTSxaN2M.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+#report-lost {
+    background-image: url('https://as2.ftcdn.net/v2/jpg/08/61/50/03/1000_F_861500332_8lOznnYHPaFh9nWyNu4oLEQUOTSxaN2M.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+#contact-admin {
+    background-image: url('https://example.com/contact-admin-background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+    section {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    button {
+        font-size: 0.9em;
+    }
+}

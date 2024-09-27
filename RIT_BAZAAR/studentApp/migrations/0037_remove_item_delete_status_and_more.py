@@ -14,8 +14,5 @@ class Migration(migrations.Migration):
             model_name='item',
             name='delete_status',
         ),
-        migrations.RemoveField(
-            model_name='student',
-            name='delete_status',
-        ),
+
     ]

@@ -26,7 +26,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="file"], textarea {
+        input[type="text"], input[type="file"], input[type="date"], input[type="time"], textarea {
             width: 100%;
             padding: 8px;
             margin: 5px 0 10px 0;
@@ -80,7 +80,6 @@
         }
         
     </style>
-    
 </head>
 <body>
     <header>
@@ -90,24 +89,25 @@
                 <li><a href="{% url 'viewitemfound' %}">Back</a></li>
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
-                
             </ul>
         </nav>
     </header>
+    
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
             <div class="{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     </div>
-{% endif %}
+    {% endif %}
+    
     <div class="form-container">
         <h2>Submit a Claim</h2>
-        <form method="post"  action="#" enctype="multipart/form-data">
+        <form method="post" action="#" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="image">Image:</label>
-                <input type="file" id="image" name="image" required>
+                <input type="file" id="image" name="image" >
             </div>
             <div class="form-group">
                 <label for="description">Description:</label>
@@ -115,10 +115,29 @@
             </div>
             <div class="form-group">
                 <label for="phone_number">Phone Number:</label>
-                <input type="text" id="phone_number" name="phone_number" maxlength="15" required>
+                
+                
+                <input type="text" id="phone_number" name="phone_number" maxlength="10" required pattern="\d{10}" title="Please enter exactly 10 digits" oninput="validatePhoneNumber(this)">
+            </div>
+            <div class="form-group">
+                <label for="lost_location">Lost Location:</label>
+                <input type="text" id="lost_location" name="lost_location" required>
+            </div>
+            <div class="form-group">
+                <label for="lost_date">Lost Date:</label>
+                <input type="date" id="lost_date" name="lost_date" required>
+            </div>
+            <div class="form-group">
+                <label for="lost_time">Lost Time:</label>
+                <input type="time" id="lost_time" name="lost_time" required>
             </div>
             <button type="submit">Submit Claim</button>
         </form>
     </div>
+    <script>
+        function validatePhoneNumber(input) {
+            input.value = input.value.replace(/[^0-9]/g, '').slice(0, 10);
+        }
+    </script>
 </body>
 </html>

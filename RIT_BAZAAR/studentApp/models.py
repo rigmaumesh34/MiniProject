@@ -1,19 +1,17 @@
-from datetime import timezone
+from datetime import datetime, timezone
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.    
+# Create your models here.   
+from django.core.exceptions import ValidationError 
 class Student(models.Model):
    
-  
-    
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=20,unique=True)
     password=models.CharField(max_length=25,null=True)
     user=models.OneToOneField(User,related_name='student_profile',on_delete=models.CASCADE)
     phone = models.CharField(max_length=40)
     department = models.CharField(max_length=50)
-    yearofstudy = models.CharField(max_length=50)  # Format: "2023-2024"
-    
+    yearofstudy = models.CharField(max_length=50) 
     
     def __str__(self):
         return f"{self.name} ({self.department}, Year {self.yearofstudy})"
@@ -23,18 +21,25 @@ class Student(models.Model):
     
 
 class Item(models.Model):
-    LIVE=1
-    DELETE=0
-    DELETE_CHOICES=((LIVE,'Live'),(DELETE,'Delete'))
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    DELETE_CHOICES=(1,'Live'),(0,'Delete')
     name = models.CharField(max_length=255,null=False)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='items/')
     delete_status=models.CharField(choices=DELETE_CHOICES,default='LIVE')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE) # ForeignKey to Student model
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     category = models.CharField(max_length=20, default='', blank=False)
-
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending',
+    )
     
     def __str__(self):
         return f"{self.name} ({self.price}, {self.description})"
@@ -54,7 +59,7 @@ class LostItem(models.Model):
     lost_location = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # ForeignKey to Student model
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='lost_items') 
     def __str__(self):
         return f"{self.name}  ({self.status}  {self.description}  {self.student})"
     
@@ -68,11 +73,11 @@ class FoundItem(models.Model):
 
     name = models.CharField(max_length=255)
     description = models.TextField()
-    found_date = models.DateField()
-    found_time = models.TimeField()
-    found_location = models.CharField(max_length=255)
+    # found_date = models.DateField()
+    # found_time = models.TimeField()
+    # found_location = models.CharField(max_length=255)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='found_items')  # ForeignKey to Student model
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='found_items')  
     
     def __str__(self):
         return f"{self.name} ({self.description} , {self.found_location})"
@@ -83,19 +88,28 @@ class FoundItem(models.Model):
 class Claim(models.Model):
     image = models.ImageField(upload_to='claims/')
     description = models.TextField()
-    phone_number = models.CharField(max_length=15) 
+    lost_location = models.CharField(max_length=25)
+    lost_date = models.DateField()
+    lost_time = models.TimeField()
+    phone_number = models.CharField(max_length=10)
     found_item = models.ForeignKey(FoundItem, on_delete=models.CASCADE)
     
     
     
-class complaints(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    description = models.TextField()
-    
+class Complaints(models.Model):
+    COMPLAINT_TYPE_CHOICES = [
+        ('LF', 'Lost and Found'),
+        ('BS', 'Buy and Sell'),
+    ]
 
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='complaint/', blank=True, null=True)
+    description = models.TextField()
+    complaint_type = models.CharField(max_length=2, choices=COMPLAINT_TYPE_CHOICES)
+
+  
     def __str__(self):
-        return f'Complaint by {self.student.username} , {self.student.email}'
+        return f'Complaint by {self.student.username} , {self.student.email}, for {self.complaint_type},{self.image},{self.description},'
     
     
 class Profile(models.Model):
@@ -118,4 +132,7 @@ class Events(models.Model):
     def __str__(self):
         return f"{self.name}, {self.location},  {self.description} , {self.dateofevent}, {self.timeofevent}"
     
-    
+class Admin(models.Model):
+    username=models.CharField(max_length=30)
+    password=models.CharField(max_length=30)
+    user=models.OneToOneField(User,related_name='admin_profile',on_delete=models.CASCADE)

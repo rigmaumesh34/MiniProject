@@ -58,25 +58,32 @@
     </header>
 </head>
 <body>
+    
+
     {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <div class="{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
-    <form action="" method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <h2 align="center">Submit Complaint</h2>
-
-
-
-        <label for="description">Description of Complaint</label>
-        <textarea id="description" name="description" placeholder="Enter complaint details" rows="4" required></textarea>
         
+        <label for="complaint_type">Type of Complaint:</label>
+        <select id="complaint_type" name="complaint_type" required>
+            <option value="LF">Lost and Found</option>
+            <option value="BS">Buy and Sell</option>
+        </select><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="image">Upload Image (optional):</label>
+        <input type="file" id="image" name="image"><br><br>
+
         <button type="submit">Submit Complaint</button>
     </form>
-
 </body>
 </html>

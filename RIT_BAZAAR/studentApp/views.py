@@ -1,17 +1,19 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
+
 from studentApp.models import *
 from django.contrib import messages
 import re  # For email validation
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from .helpers import send_forget_password_mail
 import uuid
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from .models import Profile
 import uuid
+from django.contrib.auth.forms import AuthenticationForm
 
 
 def index(request):
@@ -51,6 +53,10 @@ def studentlogin(request):
 
         if user is not None:
             login(request, user)
+            student = Student.objects.get(user=user)
+
+            # Store student ID in session
+            request.session['student_id'] = student.id
             return redirect('studenthome')
         else:
             messages.error(request, 'Invalid username or password.')
@@ -61,10 +67,14 @@ def studentlogin(request):
 
 
 def studenthome(request):
-   
-     return render(request, 'studenthome.html', {'username': request.user.username})
-
-
+    
+    student_id = request.session.get('student_id')
+    if not student_id:
+        messages.error(request, 'You need to log in first.')
+        return redirect('studentlogin')
+    student = Student.objects.get(id=student_id)
+    
+    return render(request, 'studenthome.html', {'student': student})
 
 def additem(request):
     if request.method == 'POST':
@@ -76,12 +86,12 @@ def additem(request):
         student = Student.objects.get(user=request.user)
         item_image = request.FILES.get('itemimage')
 
-        # Validate required fields
+        
         if not item_name or not description or not price or not quantity or not category or not item_image:
             messages.error(request, 'All fields are required.')
             return render(request, 'additem.html')
 
-        # Create and save the item
+        
         try:
             item = Item.objects.create(
                 student=student,
@@ -106,15 +116,15 @@ def additem(request):
 
 def buyitem(request):
     
-    items = Item.objects.filter(delete_status='LIVE')
+    items = Item.objects.filter(delete_status='LIVE',status='approved')
     return render(request, 'buyitem.html', {'items': items})
 
 
 def manageitem(request):
-    # Assuming `request.user` is linked to your `Student` model
-    students = request.user.student_profile  # Assuming there is a `OneToOne` relationship between User and Student
+    
+    students = request.user.student_profile  
 
-    # Retrieve all items for the logged-in student that are not deleted
+    
     items = Item.objects.filter(student=students, delete_status='LIVE')
 
     context = {
@@ -127,7 +137,7 @@ def manageitem(request):
 def deleteitem(request, item_id):
     item = get_object_or_404(Item, id=item_id, student=request.user.student_profile)
     
-    # Mark the item as deleted
+   
     item.delete_status = Item.DELETE
     item.save()
 
@@ -155,18 +165,13 @@ def reportitemfound(request):
        
             item_name = request.POST.get('itemName')
             description = request.POST.get('description')
-            location_found = request.POST.get('location')
-            date_found = request.POST.get('dateFound')
-            time_found = request.POST.get('timeFound')
+          
             
             student = Student.objects.get(user=request.user)
           
             found_item = FoundItem(
                 name=item_name,
                 description=description,
-                found_location=location_found,
-                found_date=date_found,
-                found_time=time_found,
                
                 student=student,
                 status='not_found'
@@ -222,18 +227,18 @@ def manageprofile(request):
     student = Student.objects.get(email=request.user.email)  # Assuming email is unique
 
     if request.method == 'POST':
-        # Get the updated data from the form
+      
         student.name = request.POST['username']
         student.email = request.POST['email']
         student.phone = request.POST['phone']
         student.yearofstudy = request.POST['yearofstudy']
         student.department = request.POST['department']
-        student.password=request.POST['password']  # Update password
+        student.password=request.POST['password'] 
 
-        # Save the updated student object to the database
+       
         student.save()
 
-        # Display a success message
+       
         messages.success(request, 'Profile updated successfully!')
         return redirect('manageprofile')
 
@@ -259,10 +264,51 @@ def viewitemfound(request):
     return render(request, 'viewitemfound.html', context)
 
 
+def claimitem(request, found_item_id):
+    
+    found_item = get_object_or_404(FoundItem, id=found_item_id)
 
-def claimitem(request):
+    if request.method == 'POST':
+        
 
-    return render(request, 'claimitem.html')
+        
+        image = request.FILES.get('image')
+        description = request.POST.get('description')
+        phone_number = request.POST.get('phone_number')
+        lost_location = request.POST.get('lost_location')
+        lost_date = request.POST.get('lost_date')
+        lost_time = request.POST.get('lost_time')
+
+       
+        if not description or not phone_number or not lost_location or not lost_date or not lost_time:
+            messages.error(request, 'All fields are required.')
+            return render(request, 'claimitem.html', {'found_item': found_item}) 
+
+        if not phone_number.isdigit() or len(phone_number) != 10:
+            messages.error(request, 'Please enter a valid 10-digit phone number.')
+            return render(request, 'claimitem.html', {'found_item': found_item})
+
+        
+        claim = Claim(
+            image=image,
+            description=description,
+            phone_number=phone_number,
+            lost_location=lost_location,
+            lost_date=lost_date,
+            lost_time=lost_time,
+            found_item=found_item 
+        )
+        
+        
+        
+        claim.save()
+        messages.success(request, 'Your claim has been successfully submitted.')
+        return redirect('viewitemfound') 
+
+    return render(request, 'claimitem.html', {'found_item': found_item})
+
+   
+    
 
 def viewitemlost(request):
     lost_items = LostItem.objects.select_related('student').all()
@@ -271,16 +317,23 @@ def viewitemlost(request):
 def complaints(request):
     if request.method == 'POST':
         description = request.POST['description']
+        complaint_type = request.POST['complaint_type']
+        image = request.FILES.get('image', None)
         student = request.user
 
-        complaint = complaints(student=student, description=description)
+       
+        complaint = Complaints(
+            student=student,
+            description=description,
+            complaint_type=complaint_type,
+            image=image
+        )
         complaint.save()
 
         messages.success(request, 'Your complaint has been submitted successfully.')
-        return redirect('studenthome')
+        return redirect('complaint')
 
     return render(request, 'complaint.html')
-
 # def forgetpassword(request):
 #     if request.method=='POST':
 #         username=request.POST.get('username')
@@ -305,26 +358,26 @@ def forgetpassword(request):
     if request.method == 'POST':
         email = request.POST.get('email')
 
-        # Check if a user with the provided email exists
+        
         user = User.objects.filter(email=email).first()
         if not user:
             messages.error(request, 'No user with this email exists.')
             return redirect('forgetpassword')
 
         try:
-            # Attempt to get the Profile object associated with the user
+            
             profile_obj = Profile.objects.get(user=user)
         except Profile.DoesNotExist:
-            # Handle the case where the Profile does not exist
+           
             messages.error(request, 'Profile for this user does not exist.')
             return redirect('forgetpassword')
 
-        # Generate a token and save it to the profile
+        
         token = str(uuid.uuid4())
         profile_obj.forget_password_token = token
         profile_obj.save()
 
-        # Send an email with the password reset link
+        
         send_forget_password_mail(user, token)
         messages.success(request, 'An email has been sent with a link to reset your password.')
         return redirect('forgetpassword')
@@ -334,7 +387,7 @@ def forgetpassword(request):
 
 def confirmpassword(request, token):
     try:
-        # Find the profile with the corresponding token
+       
         profile_obj = Profile.objects.get(forget_password_token=token)
         user = profile_obj.user
 
@@ -356,16 +409,7 @@ def confirmpassword(request, token):
 
     except Profile.DoesNotExist:
         messages.error(request, 'Invalid or expired token.')
-        return redirect('forgetpassword')
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        return redirect('forgetpassword') 
 
 
 def eventss(request):
@@ -381,7 +425,13 @@ def manageitemfound(request):
     }
     return render(request, 'manageitemfound.html', context)
 
-
+def manageitemlost(request):
+    student = request.user.student_profile
+    items = student.lost_items.all()  
+    context = {
+        'items': items
+    }
+    return render(request, 'manageitemlost.html', context)
 
 def deleteitemfound(request, item_id):
 
@@ -392,3 +442,113 @@ def deleteitemfound(request, item_id):
     return redirect('manageitemfound')
 
 
+def deleteitemlost(request, item_id):
+
+    item = get_object_or_404(LostItem, id=item_id, student=request.user.student_profile)
+    item.delete()
+
+    messages.success(request, 'Item deleted successfully.')
+    return redirect('manageitemlost')
+
+def adminlogin(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Check if the entered username and password are correct
+        if username == "admin" and password == "password":
+            # Redirect to some success page (replace 'admin_dashboard' with your actual URL name)
+            return redirect('adminhome')
+        else:
+            # Add an error message if login fails
+            messages.error(request, "Invalid username or password")
+    
+    return render(request, 'adminlogin.html')
+   
+
+
+def adminhome(request):
+    if not request.session.get('admin_id'):
+        return HttpResponseForbidden("You are not authorized to access this page.")
+    
+    items = Item.objects.filter(delete_status='LIVE',status='pending')
+    return render(request, 'adminhome.html', {'items': items})
+    
+    
+def approve_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    item.status = 'approved'  # Assuming you have a status field
+    item.save()
+    return redirect('adminhome')
+
+def reject_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    item.status = 'rejected'
+    item.save()
+    return redirect('adminhome')
+
+# User Login View
+def admin_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                admins = Admin.objects.get(user=user)
+
+                request.session['admin_id'] = admins.id
+                return redirect('adminhome')  
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'adminlogin.html', {'form': form})
+
+
+def admin_logout(request):
+    logout(request)
+
+    return redirect('adminlogin')
+
+
+def view_complaints(request):
+   
+    complaints = Complaints.objects.all()
+
+   
+    return render(request, 'viewcomplaints.html', {'complaints': complaints})
+
+
+
+
+def admin_addevent(request):
+    mess = ''
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        location = request.POST.get('location')
+        dateofevent = request.POST.get('dateofevent')
+        timeofevent = request.POST.get('timeofevent')
+        image = request.FILES.get('image')
+
+        # Create and save the event object
+        event = Events(
+            name=name,
+            description=description,
+            location=location,
+            dateofevent=dateofevent,
+            timeofevent=timeofevent,
+            image=image
+        )
+        event.save()
+
+        # Redirect or render the event.html to display the event details
+        mess='Event has been added successfully!'
+
+    return render(request, 'adminaddevent.html',{'mess':mess})

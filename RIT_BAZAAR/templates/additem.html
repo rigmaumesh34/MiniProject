@@ -5,77 +5,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Item for Sale</title>
-  <link rel="stylesheet" href="{% static 'css/reg.css' %}">
-  <link rel="stylesheet" href="{% static 'css/header.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/additem.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
     <header>
-        <h3> Sell Items here</h3>
+        <h3>Sell Items here</h3>
         <nav>
             <ul>
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
                 <li><a href="{% url 'manageitem' %}">Manage Item</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
-                
             </ul>
         </nav>
     </header>
-</head>
-<body>
+
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
             <div class="{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     </div>
-{% endif %}
+    {% endif %}
 
+    <div class="register-container">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Add Item</h2>
 
-<div class="register-container">
-    <div class="form-group">
-<form action="" method="post" enctype="multipart/form-data" >
-    {% csrf_token %}
-  
-    <h2 align="center">Add Item </h2>
-    <label for="name">Item Name</label>
-    <input type="text" id="itemname" name="name" placeholder="Enter item name" required>
-<br>
-<br>
-    <label for="description">Description</label>
-    <textarea id="description" name="description" placeholder="Enter item description" rows="4" required></textarea>
-<br>
-<br>
-    <label for="price">Price </label>
-    <input type="number" id="price" name="price" placeholder="Enter price" required>
-<br>
-<br>
-    <label for="quantity">Quantity </label>
-    <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
-<br>
-<br>
-    <label for="category">Category</label>
-    <select class="category" id="category" name="category"  required>
-        <option value="" disabled selected>Select item type</option>
-        <option value="books">Books</option>
-        <option value="electronics">Electronics</option>
-        <option value="furniture">Furniture</option>
-        <option value="others">Others</option>
-    </select>
-    <br>
-    <br>
-   <br> 
-    <label for="itemimage">Upload Image</label>
-    <input type="file" id="itemimage" name="itemimage"  required>
-    <br>
-    
+            <div class="form-group">
+                <label for="itemname">Item Name</label>
+                <input type="text" id="itemname" name="name" placeholder="Enter item name" required>
+            </div>
 
-    
-<br>
-<br>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Enter item description" rows="4" required></textarea>
+            </div>
 
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" placeholder="Enter price" required>
+            </div>
 
-    <button type="submit">Submit Item</button>
-</form>
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
+            </div>
 
-</div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled selected>Select item type</option>
+                    <option value="books">Books</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="itemimage">Upload Image</label>
+                <input type="file" id="itemimage" name="itemimage" required>
+            </div>
+
+            <button type="submit">Submit Item</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RIT BAZAR</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/section.css' %}">
     
 </head>
 <body>
     <header>
-        <h2>Hello  {{ username }} Welcome to RIT BAZAR</h2>
+        <h3>Hello  {{ username }} Welcome to RIT BAZAR</h3>
         <nav>
             <ul>
                 <li><a href="{% url 'events' %}">View events</a></li>
@@ -26,31 +27,31 @@
     
     <section id="sell-item">
         <h2>Sell Item</h2>
-        <p>Have something to sell? List it here and find a buyer.</p>
+        
         <button onclick="redirectToAddItem()">Sell an Item</button>
     </section>
 
     <section id="buy-item">
         <h2>Buy Item</h2>
-        <p>Looking for something? Browse through the items available for sale.</p>
+        
         <button onclick="redirectToBuyItem()">Buy an Item</button>
     </section>
 
     <section id="report-found">
         <h2>Report Found Item</h2>
-        <p>Found something? Help it get back to its owner.</p>
+       
         <button onclick="redirectToReportItemFound()">Report Found Item</button>
     </section>
 
     <section id="report-lost">
         <h2>Report Lost Item</h2>
-        <p>Lost something? Report it here and we'll help you find it.</p>
+       
         <button onclick="redirectToReportItemLost()">Report Lost Item</button>
     </section>
 
     <section id="contact-admin">
         <h2>Contact Admin</h2>
-        <p>Have questions or need assistance? Contact the admin here.</p>
+     
         <button onclick="redirectToComplaintregister()">Register Complaint</button>
     </section>
 
@@ -77,6 +78,36 @@
         }
 
     </script>
-
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 RIT BAZAAR. All rights reserved.</p>
+           
+        </div>
+    </footer>
+    
+    <!-- Add this to your CSS file (style.css) -->
+    <style>
+        footer {
+            background-color: #004d00; /* Dark green */
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+    
+        .footer-content p {
+            margin: 0;
+        }
+    
+        .footer-content a {
+            color: #aaffaa; /* Light green for links */
+            text-decoration: none;
+        }
+    
+        .footer-content a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    
 </body>
 </html>
