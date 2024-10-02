@@ -55,6 +55,9 @@ urlpatterns = [
     path('adminaddevent', views.admin_addevent, name='adminaddevent'),
     path('viewcomplaints/', views.view_complaints, name='viewcomplaints'),
     path('logout/', views.admin_logout, name='logout'),
+    path('viewclaim/', views.viewclaim, name='viewclaim'),
+    # path('payment/initiate/<int:item_id>/', views.initiate_payment, name='initiate_payment'),
+    # path('payment/handle-payment/', views.handle_payment, name='handle_payment'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

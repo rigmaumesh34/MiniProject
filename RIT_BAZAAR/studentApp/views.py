@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
+from .paytm_config import PAYTM_MERCHANT_KEY, PAYTM_MERCHANT_ID, PAYTM_WEBSITE, PAYTM_TRANSACTION_URL
+from django.conf import settings
 
 from studentApp.models import *
 from django.contrib import messages
 import re  # For email validation
 from django.contrib import messages
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from .helpers import send_forget_password_mail
 import uuid
 from django.views.decorators.csrf import csrf_exempt
@@ -104,7 +106,9 @@ def additem(request):
                 delete_status='LIVE'
             )
             item.save()
-            messages.success(request, 'Item added successfully!')
+            return render(request, 'additem.html', {'message': 'submitted item details to admin !'})
+
+    
         except Exception as e:
             messages.error(request, f'Error saving item: {e}')
 
@@ -138,10 +142,12 @@ def deleteitem(request, item_id):
     item = get_object_or_404(Item, id=item_id, student=request.user.student_profile)
     
    
-    item.delete_status = Item.DELETE
-    item.save()
+    # item.delete_status = Item.DELETE
+    if request.method == 'POST':
+        item.delete() 
+        messages.success(request, 'Item deleted successfully.')  # Add a success message
 
-    messages.success(request, 'Item deleted successfully.')
+
     return redirect('manageitem')
 
 
@@ -280,14 +286,14 @@ def claimitem(request, found_item_id):
         lost_time = request.POST.get('lost_time')
 
        
-        if not description or not phone_number or not lost_location or not lost_date or not lost_time:
+        if  not phone_number or not lost_location or not lost_date or not lost_time:
             messages.error(request, 'All fields are required.')
             return render(request, 'claimitem.html', {'found_item': found_item}) 
 
         if not phone_number.isdigit() or len(phone_number) != 10:
             messages.error(request, 'Please enter a valid 10-digit phone number.')
             return render(request, 'claimitem.html', {'found_item': found_item})
-
+        
         
         claim = Claim(
             image=image,
@@ -302,13 +308,21 @@ def claimitem(request, found_item_id):
         
         
         claim.save()
-        messages.success(request, 'Your claim has been successfully submitted.')
+        return render(request, 'claimitem.html', {'found_item': found_item, 'message':'Your claim has been successfully submitted.'})
+       
         return redirect('viewitemfound') 
 
     return render(request, 'claimitem.html', {'found_item': found_item})
 
    
     
+def viewclaim(request):
+    student_id = request.session.get('student_id')
+
+    found_items = FoundItem.objects.filter(student_id=student_id)
+    found_item_ids = found_items.values_list('id', flat=True)
+    claims = Claim.objects.filter(found_item__in=found_item_ids)
+    return render(request, 'viewclaim.html',{'claims':claims})
 
 def viewitemlost(request):
     lost_items = LostItem.objects.select_related('student').all()
@@ -552,3 +566,45 @@ def admin_addevent(request):
         mess='Event has been added successfully!'
 
     return render(request, 'adminaddevent.html',{'mess':mess})
+
+# def initiate_payment(request, item_id):
+#     # Assuming you have the item and price logic here
+#     item = Item.objects.get(id=item_id)
+#     price = item.price  # For example, ₹500
+#     student_email = request.user.email  # Assuming user is logged in
+
+#     # Payment data
+#     paytm_params = {
+#         'MID': PAYTM_MERCHANT_ID,
+#         'ORDER_ID': str(item_id) + '_' + str(request.user.id),
+#         'CUST_ID': student_email,
+#         'TXN_AMOUNT': str(price),
+#         'CHANNEL_ID': 'WEB',
+#         'WEBSITE': PAYTM_WEBSITE,
+#         'INDUSTRY_TYPE_ID': 'Retail',
+#         'CALLBACK_URL': settings.PAYTM_CALLBACK_URL
+#     }
+
+#     # Generating checksum
+#     checksum = paytmchecksum.generateSignature(paytm_params, PAYTM_MERCHANT_KEY)
+#     paytm_params['CHECKSUMHASH'] = checksum
+
+#     # Sending request to Paytm payment gateway
+#     return render(request, 'redirect_to_paytm.html', {'paytm_params': paytm_params, 'PAYTM_TRANSACTION_URL': PAYTM_TRANSACTION_URL})
+
+# def handle_payment(request):
+#     received_data = dict(request.POST.items())
+#     paytm_checksum = received_data.pop('CHECKSUMHASH', None)
+#     is_valid_checksum = paytmchecksum.verifySignature(received_data, PAYTM_MERCHANT_KEY, paytm_checksum)
+
+#     if is_valid_checksum:
+#         # Payment verified
+#         if received_data['RESPCODE'] == '01':
+#             # Payment successful
+#             return HttpResponse("Payment successful")
+#         else:
+#             # Payment failed
+#             return HttpResponse(f"Payment failed because {received_data['RESPMSG']}")
+#     else:
+#         # Invalid checksum
+#         return HttpResponse("Checksum verification failed")

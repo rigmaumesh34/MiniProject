@@ -73,6 +73,8 @@
     </style>
 </head>
 <body>
+   
+  
     <header>
         <h2>Manage Your Items</h2>
         <nav>
@@ -84,7 +86,13 @@
             </ul>
         </nav>
     </header>
-
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <table>
     <tr>

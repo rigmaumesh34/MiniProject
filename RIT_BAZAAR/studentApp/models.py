@@ -35,6 +35,7 @@ class Item(models.Model):
     delete_status=models.CharField(choices=DELETE_CHOICES,default='LIVE')
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     category = models.CharField(max_length=20, default='', blank=False)
+    paid=models.BooleanField(default=False)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -76,6 +77,7 @@ class FoundItem(models.Model):
     # found_date = models.DateField()
     # found_time = models.TimeField()
     # found_location = models.CharField(max_length=255)
+    
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='found_items')  
     
@@ -93,7 +95,7 @@ class Claim(models.Model):
     lost_time = models.TimeField()
     phone_number = models.CharField(max_length=10)
     found_item = models.ForeignKey(FoundItem, on_delete=models.CASCADE)
-    
+ 
     
     
 class Complaints(models.Model):
@@ -136,3 +138,14 @@ class Admin(models.Model):
     username=models.CharField(max_length=30)
     password=models.CharField(max_length=30)
     user=models.OneToOneField(User,related_name='admin_profile',on_delete=models.CASCADE)
+    
+class Payment(models.Model):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+   
+    payment_status = models.CharField(max_length=20, default='pending')
+    transaction_id = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Payment {self.id} - {self.amount} {self.currency}'
