@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
 from .paytm_config import PAYTM_MERCHANT_KEY, PAYTM_MERCHANT_ID, PAYTM_WEBSITE, PAYTM_TRANSACTION_URL
 from django.conf import settings
-
+from django.core.mail import send_mail
 from studentApp.models import *
 from django.contrib import messages
 import re  # For email validation
@@ -16,7 +16,7 @@ from django.shortcuts import render, redirect
 from .models import Profile
 import uuid
 from django.contrib.auth.forms import AuthenticationForm
-
+from .models import Item
 
 def index(request):
     return render(request, 'index.html')
@@ -503,19 +503,58 @@ def adminhome(request):
     
     items = Item.objects.filter(delete_status='LIVE',status='pending')
     return render(request, 'adminhome.html', {'items': items})
-    
-    
+
+
+def send_item_notification(item, status):
+    """
+    Sends an email to the item's owner regarding the approval/rejection status.
+    """
+    subject = f"Your item '{item.name}' has been {status}!"
+    message = f"Dear {item.student.name},\n\n" \
+              f"Your item '{item.name}' has been {status} by the admin.\n" \
+              f"Thank you for using our platform."
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [item.student.email]  # Owner's email
+
+    send_mail(
+        subject,      # Email subject
+        message,      # Email body
+        from_email,   # From email
+        recipient_list,  # To email
+        fail_silently=False,
+    )
+
 def approve_item(request, item_id):
     item = get_object_or_404(Item, id=item_id)
     item.status = 'approved'  # Assuming you have a status field
     item.save()
+
+    # Send email notification for approval
+    send_item_notification(item, 'approved')
+
     return redirect('adminhome')
 
 def reject_item(request, item_id):
     item = get_object_or_404(Item, id=item_id)
     item.status = 'rejected'
     item.save()
-    return redirect('adminhome')
+
+    # Send email notification for rejection
+    send_item_notification(item, 'rejected')
+
+    return redirect('adminhome')  
+    
+# def approve_item(request, item_id):
+#     item = get_object_or_404(Item, id=item_id)
+#     item.status = 'approved'  # Assuming you have a status field
+#     item.save()
+#     return redirect('adminhome')
+
+# def reject_item(request, item_id):
+#     item = get_object_or_404(Item, id=item_id)
+#     item.status = 'rejected'
+#     item.save()
+#     return redirect('adminhome')
 
 # User Login View
 def admin_login(request):
