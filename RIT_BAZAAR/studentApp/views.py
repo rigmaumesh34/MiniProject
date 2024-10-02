@@ -430,6 +430,22 @@ def eventss(request):
     events = Events.objects.all()
     return render(request, 'events.html', {'events': events})
 
+def manageevent(request):
+    events = Events.objects.all()
+    return render(request, 'manageevent.html', {'events': events})
+
+def deleteevent(request,event_id):
+    event = get_object_or_404(Events, id=event_id)
+    if request.method == 'POST':
+        event.delete()
+    
+    return redirect('manageevent')
+
+
+
+
+
+
 
 def manageitemfound(request):
     student = request.user.student_profile
