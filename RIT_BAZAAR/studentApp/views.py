@@ -21,7 +21,8 @@ from .models import Item
 def index(request):
     return render(request, 'index.html')
 
-
+def paymentdummy(request):
+    return render(request, 'paymentdummy.html')
 
 from django.db import IntegrityError
 from django.contrib import messages
@@ -122,6 +123,10 @@ def buyitem(request):
     
     items = Item.objects.filter(delete_status='LIVE',status='approved')
     return render(request, 'buyitem.html', {'items': items})
+
+def viewitemlost(request):
+    lost_items = LostItem.objects.filter(stat='approved')
+    return render(request, 'viewitemlost.html', {'lost_items': lost_items})
 
 
 def manageitem(request):
@@ -324,9 +329,6 @@ def viewclaim(request):
     claims = Claim.objects.filter(found_item__in=found_item_ids)
     return render(request, 'viewclaim.html',{'claims':claims})
 
-def viewitemlost(request):
-    lost_items = LostItem.objects.select_related('student').all()
-    return render(request, 'viewitemlost.html', {'lost_items': lost_items})
 
 def complaints(request):
     if request.method == 'POST':
@@ -485,12 +487,12 @@ def adminlogin(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Check if the entered username and password are correct
+        
         if username == "admin" and password == "password":
-            # Redirect to some success page (replace 'admin_dashboard' with your actual URL name)
+            
             return redirect('adminhome')
         else:
-            # Add an error message if login fails
+            
             messages.error(request, "Invalid username or password")
     
     return render(request, 'adminlogin.html')
@@ -504,6 +506,12 @@ def adminhome(request):
     items = Item.objects.filter(delete_status='LIVE',status='pending')
     return render(request, 'adminhome.html', {'items': items})
 
+def manageitemlost(request):
+    if not request.session.get('admin_id'):
+        return HttpResponseForbidden("You are not authorized to access this page.")
+    
+    items = LostItem.objects.filter(stat='pending')
+    return render(request, 'mangeitemlost_admin.html', {'items': items})
 
 def send_item_notification(item, status):
     """
@@ -514,35 +522,92 @@ def send_item_notification(item, status):
               f"Your item '{item.name}' has been {status} by the admin.\n" \
               f"Thank you for using our platform."
     from_email = settings.EMAIL_HOST_USER
-    recipient_list = [item.student.email]  # Owner's email
+    recipient_list = [item.student.email] 
 
     send_mail(
-        subject,      # Email subject
-        message,      # Email body
-        from_email,   # From email
-        recipient_list,  # To email
+        subject,      
+        message,     
+        from_email,  
+        recipient_list,
         fail_silently=False,
     )
 
+def send_item_notification_lost(item, stat):
+    """
+    Sends an email to the item's owner regarding the approval/rejection status.
+    """
+    subject = f"Your item '{item.name}' has been {stat}!"
+    message = f"Dear {item.student.name},\n\n" \
+              f"Your item '{item.name}' has been {stat} by the admin.\n" \
+              f"Thank you for using our platform."
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [item.student.email] 
+
+    send_mail(
+        subject,      
+        message,     
+        from_email,  
+        recipient_list,
+        fail_silently=False,
+    )
+
+
+
+
+
 def approve_item(request, item_id):
     item = get_object_or_404(Item, id=item_id)
-    item.status = 'approved'  # Assuming you have a status field
+    item.status = 'approved'
     item.save()
 
-    # Send email notification for approval
+  
     send_item_notification(item, 'approved')
 
     return redirect('adminhome')
+
+def approve_item_lost(request, item_id):
+    item = get_object_or_404(LostItem, id=item_id)
+    item.stat = 'approved'
+    item.save()
+
+  
+    send_item_notification_lost(item, 'approved')
+
+    return redirect('mangeitemlost_admin')
+
+# def approve_item_found(request, item_id):
+#     item = get_object_or_404(FoundItem, id=item_id)
+#     item.stat = 'approved'
+#     item.save()
+
+  
+#     send_item_notification(item, 'approved')
+
+#     return redirect('manageitemfound_admin')
+
+
+
+
 
 def reject_item(request, item_id):
     item = get_object_or_404(Item, id=item_id)
     item.status = 'rejected'
     item.save()
 
-    # Send email notification for rejection
+   
     send_item_notification(item, 'rejected')
 
-    return redirect('adminhome')  
+    return redirect('adminhome') 
+ 
+def reject_item_lost(request, item_id):
+    item = get_object_or_404(LostItem, id=item_id)
+    item.stat = 'rejected'
+    item.save()
+
+   
+    send_item_notification_lost(item, 'rejected')
+
+    return redirect('mangeitemlost_admin')
     
 # def approve_item(request, item_id):
 #     item = get_object_or_404(Item, id=item_id)
@@ -606,7 +671,7 @@ def admin_addevent(request):
         timeofevent = request.POST.get('timeofevent')
         image = request.FILES.get('image')
 
-        # Create and save the event object
+        
         event = Events(
             name=name,
             description=description,
@@ -617,7 +682,7 @@ def admin_addevent(request):
         )
         event.save()
 
-        # Redirect or render the event.html to display the event details
+        
         mess='Event has been added successfully!'
 
     return render(request, 'adminaddevent.html',{'mess':mess})

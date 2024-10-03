@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .payment-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .payment-option {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .payment-method {
+            margin-bottom: 10px;
+        }
+        .pay-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .pay-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <h2>Select Payment Method</h2>
+
+        <!-- Credit Card Payment -->
+        <div class="payment-option">
+            <input type="radio" name="payment" id="credit-card" checked>
+            <label for="credit-card">Pay with Credit Card</label>
+            <div class="payment-method">
+                <label for="cc-number">Card Number</label>
+                <input type="text" id="cc-number" placeholder="1234 5678 9012 3456">
+                <label for="cc-expiry">Expiry Date</label>
+                <input type="text" id="cc-expiry" placeholder="MM/YY">
+                <label for="cc-cvv">CVV</label>
+                <input type="password" id="cc-cvv" placeholder="123">
+            </div>
+        </div>
+
+        <!-- PayPal Payment -->
+        <div class="payment-option">
+            <input type="radio" name="payment" id="paypal">
+            <label for="paypal">Pay with PayPal</label>
+            <div class="payment-method">
+                <label for="paypal-email">Email</label>
+                <input type="email" id="paypal-email" placeholder="example@domain.com">
+            </div>
+        </div>
+
+        <!-- Bank Transfer Payment -->
+        <div class="payment-option">
+            <input type="radio" name="payment" id="bank-transfer">
+            <label for="bank-transfer">Pay with Bank Transfer</label>
+        </div>
+
+        <button class="pay-button">Pay Now</button>
+    </div>
+
+</body>
+</html>

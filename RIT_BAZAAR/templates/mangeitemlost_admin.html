@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Items for Sale</title>
+    <title>Items lost</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -15,30 +15,27 @@
     <header>
         <nav>
             <ul>
-                <li><a href="{% url 'adminaddevent' %}">Add Event</a></li>
-                <li><a href="{% url 'mangeitemlost_admin' %}">Manage Item Lost</a></li>
+                <li><a href="{% url 'adminhome' %}">Admin Home</a></li>
                 <li><a href="{% url 'adminlogout' %}">Logout</a></li>
-                <li><a href="{% url 'viewcomplaints' %}">View Complaints</a></li>
+                
                 
             </ul>
         </nav>
     </header>
 
-    <h2 style="text-align: center; color: green;">Items Available for Sale</h2>
+    <h2 style="text-align: center; color: green;">Items Reported Lost</h2>
 
     <div class="table-container" style="text-align: center;">
         <table border="1" cellpadding="10" cellspacing="0" style="margin: 0 auto; width: 90%;">
             <thead>
                 <tr>
                     <th>Image</th>
-                    <th>Name</th>
+                    <th>Item name</th>
                     <th>Description</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Category</th>
-                    <th>Contact Name</th>
-                    <th>Contact Email</th>
-                    <th>Contact Phone</th>
+                    <th>Lost date</th>
+                    <th>Lost time</th>
+                    <th>Lost location</th>
+                    <th>Student details</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -54,18 +51,23 @@
                     </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.description }}</td>
-                    <td>₹{{ item.price }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.category }}</td>
-                    <td>{{ item.student.name }}</td>
-                    <td>{{ item.student.email }}</td>
-                    <td>{{ item.student.phone }}</td>
+                    <td>₹{{ item.lost_date }}</td>
+                    <td>{{ item.lost_time }}</td>
+                    <td>{{ item.lost_location }}</td>
+                    <td>
+                    <ul>
+                    <li>{{ item.student.name }}</li>
+                    <li>{{ item.student.email }}</li>
+                    <li>{{ item.student.phone }}</li>
+                    <li>{{item.student.department}}</li>
+                    </ul>
+                </td>
                 <td>
-                        <form method="POST" action="{% url 'approve_item' item.id %}" style="display:inline;">
+                        <form method="POST" action="{% url 'approve_item_lost' item.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="approve-button">Approve</button>
                         </form>
-                        <form method="POST" action="{% url 'reject_item' item.id %}" style="display:inline;">
+                        <form method="POST" action="{% url 'reject_item_lost' item.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="reject-button">Reject</button>
                         </form>

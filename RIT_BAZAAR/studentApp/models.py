@@ -52,6 +52,11 @@ class LostItem(models.Model):
         ('found', 'Found'),
         ('not_found', 'Not Found'),
     ]
+    STAT_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
 
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -60,7 +65,12 @@ class LostItem(models.Model):
     lost_location = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='lost_items') 
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='lost_items')
+    stat = models.CharField(
+        max_length=10,
+        choices=STAT_CHOICES,
+        default='pending',
+    ) 
     def __str__(self):
         return f"{self.name}  ({self.status}  {self.description}  {self.student})"
     
@@ -71,7 +81,11 @@ class FoundItem(models.Model):
         ('owner_verified', 'Owner Verified'),
         ('not_verified', 'Not Verified'),
     ]
-
+    STAT_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
     name = models.CharField(max_length=255)
     description = models.TextField()
     # found_date = models.DateField()
@@ -80,7 +94,11 @@ class FoundItem(models.Model):
     
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='found_items')  
-    
+    stat = models.CharField(
+        max_length=10,
+        choices=STAT_CHOICES,
+        default='pending',
+    )
     def __str__(self):
         return f"{self.name} ({self.description} , {self.found_location})"
 

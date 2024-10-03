@@ -46,7 +46,7 @@
                     Phone: {{ item.student.phone }}
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <form action="#" method="POST">
+                    <form action="{% url 'paymentdummy'  %}" method="POST">
                         {% csrf_token %}
                         <button id="rzp-button" class="btn btn-primary">Pay ₹{{ item.price }}</button>
                     </form>
