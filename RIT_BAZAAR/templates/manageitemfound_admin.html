@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Items lost</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'adminhome' %}">Admin Home</a></li>
+                <li><a href="{% url 'adminlogout' %}">Logout</a></li>
+                
+                
+            </ul>
+        </nav>
+    </header>
+
+    <h2 style="text-align: center; color: green;">Items Reported Found</h2>
+
+    <div class="table-container" style="text-align: center;">
+        <table border="1" cellpadding="10" cellspacing="0" style="margin: 0 auto; width: 90%;">
+            <thead>
+                <tr>
+
+                    <th>Item name</th>
+                    <th>Description</th>
+                    <th>Student details</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                   
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>
+                    <ul>
+                    <li>{{ item.student.name }}</li>
+                    <li>{{ item.student.email }}</li>
+                    <li>{{item.student.department}}</li>
+                    </ul>
+                </td>
+                <td>
+                        <form method="POST" action="{% url 'approve_item_found' item.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="approve-button">Approve</button>
+                        </form>
+                        <form method="POST" action="{% url 'reject_item_found' item.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="reject-button">Reject</button>
+                        </form>
+                    </td> 
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="" async defer></script>
+</body>
+</html>

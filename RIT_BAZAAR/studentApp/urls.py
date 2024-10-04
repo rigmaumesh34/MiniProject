@@ -52,8 +52,10 @@ urlpatterns = [
     path('adminhome/', views.adminhome, name='adminhome'),
     path('approve_item/<int:item_id>/', views.approve_item, name='approve_item'),
     path('approve_item_lost/<int:item_id>/', views.approve_item_lost, name='approve_item_lost'),
+    path('approve_item_found/<int:item_id>/', views.approve_item_found, name='approve_item_found'),
     path('reject_item/<int:item_id>/', views.reject_item, name='reject_item'),
     path('reject_item_lost/<int:item_id>/', views.reject_item_lost, name='reject_item_lost'),
+    path('reject_item_found/<int:item_id>/', views.reject_item_found, name='reject_item_found'),
     path('adminaddevent', views.admin_addevent, name='adminaddevent'),
     path('viewcomplaints/', views.view_complaints, name='viewcomplaints'),
     path('logout/', views.admin_logout, name='logout'),
@@ -61,9 +63,11 @@ urlpatterns = [
     path('manageevent/', views.manageevent, name='manageevent'),
     path('deleteevent/<int:event_id>/', views.deleteevent, name='deleteevent'),
     path('paymentdummy', views.paymentdummy, name='paymentdummy'),
-    path('mangeitemlost_admin', views.manageitemlost, name='mangeitemlost_admin'),
+    path('mangeitemlost_admin', views.manageitemlost_admin, name='mangeitemlost_admin'),
+    path('manageitemfound_admin', views.manageitemfound_admin, name='manageitemfound_admin'),
     # path('payment/initiate/<int:item_id>/', views.initiate_payment, name='initiate_payment'),
     # path('payment/handle-payment/', views.handle_payment, name='handle_payment'),
+    
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

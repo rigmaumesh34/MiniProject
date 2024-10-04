@@ -48,10 +48,7 @@ class Item(models.Model):
     
 
 class LostItem(models.Model):
-    STATUS_CHOICES = [
-        ('found', 'Found'),
-        ('not_found', 'Not Found'),
-    ]
+
     STAT_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
@@ -63,7 +60,6 @@ class LostItem(models.Model):
     lost_date = models.DateField()
     lost_time = models.TimeField()
     lost_location = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='not_found')
     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='lost_items')
     stat = models.CharField(
@@ -77,10 +73,7 @@ class LostItem(models.Model):
 
 
 class FoundItem(models.Model):
-    STATUS_CHOICES = [
-        ('owner_verified', 'Owner Verified'),
-        ('not_verified', 'Not Verified'),
-    ]
+  
     STAT_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
@@ -92,7 +85,7 @@ class FoundItem(models.Model):
     # found_time = models.TimeField()
     # found_location = models.CharField(max_length=255)
     
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='not_verified')
+    
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='found_items')  
     stat = models.CharField(
         max_length=10,

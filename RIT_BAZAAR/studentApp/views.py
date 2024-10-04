@@ -128,6 +128,11 @@ def viewitemlost(request):
     lost_items = LostItem.objects.filter(stat='approved')
     return render(request, 'viewitemlost.html', {'lost_items': lost_items})
 
+def viewitemfound(request):
+   
+    found_items = FoundItem.objects.filter(stat='approved')
+    return render(request, 'viewitemfound.html', {'found_items':found_items})
+
 
 def manageitem(request):
     
@@ -266,13 +271,6 @@ def navbar(request):
     return render(request, 'navbar.html')
 
 
-def viewitemfound(request):
-   
-    found_items = FoundItem.objects.all()
-    context = {
-        'found_items': found_items
-    }
-    return render(request, 'viewitemfound.html', context)
 
 
 def claimitem(request, found_item_id):
@@ -465,6 +463,8 @@ def manageitemlost(request):
     }
     return render(request, 'manageitemlost.html', context)
 
+
+
 def deleteitemfound(request, item_id):
 
     item = get_object_or_404(FoundItem, id=item_id, student=request.user.student_profile)
@@ -506,12 +506,21 @@ def adminhome(request):
     items = Item.objects.filter(delete_status='LIVE',status='pending')
     return render(request, 'adminhome.html', {'items': items})
 
-def manageitemlost(request):
+def manageitemlost_admin(request):
     if not request.session.get('admin_id'):
         return HttpResponseForbidden("You are not authorized to access this page.")
     
     items = LostItem.objects.filter(stat='pending')
     return render(request, 'mangeitemlost_admin.html', {'items': items})
+
+def manageitemfound_admin(request):
+    if not request.session.get('admin_id'):
+        return HttpResponseForbidden("You are not authorized to access this page.")
+    
+    items = FoundItem.objects.filter(stat='pending')
+    return render(request, 'manageitemfound_admin.html', {'items': items})
+
+
 
 def send_item_notification(item, status):
     """
@@ -551,7 +560,24 @@ def send_item_notification_lost(item, stat):
         fail_silently=False,
     )
 
+def send_item_notification_found(item, stat):
+    """
+    Sends an email to the item's owner regarding the approval/rejection status.
+    """
+    subject = f"Your item '{item.name}' has been {stat}!"
+    message = f"Dear {item.student.name},\n\n" \
+              f"Your item '{item.name}' has been {stat} by the admin.\n" \
+              f"Thank you for using our platform."
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [item.student.email] 
 
+    send_mail(
+        subject,      
+        message,     
+        from_email,  
+        recipient_list,
+        fail_silently=False,
+    )
 
 
 
@@ -574,6 +600,19 @@ def approve_item_lost(request, item_id):
     send_item_notification_lost(item, 'approved')
 
     return redirect('mangeitemlost_admin')
+
+
+
+def approve_item_found(request, item_id):
+    item = get_object_or_404(FoundItem, id=item_id)
+    item.stat = 'approved'
+    item.save()
+
+  
+    send_item_notification_found(item, 'approved')
+
+    return redirect('manageitemfound_admin')
+
 
 # def approve_item_found(request, item_id):
 #     item = get_object_or_404(FoundItem, id=item_id)
@@ -608,6 +647,17 @@ def reject_item_lost(request, item_id):
     send_item_notification_lost(item, 'rejected')
 
     return redirect('mangeitemlost_admin')
+
+
+def reject_item_found(request, item_id):
+    item = get_object_or_404(FoundItem, id=item_id)
+    item.stat = 'rejected'
+    item.save()
+
+   
+    send_item_notification_found(item, 'rejected')
+
+    return redirect('manageitemfound_admin')
     
 # def approve_item(request, item_id):
 #     item = get_object_or_404(Item, id=item_id)
