@@ -125,11 +125,14 @@ def buyitem(request):
     return render(request, 'buyitem.html', {'items': items})
 
 def viewitemlost(request):
+    LostItem.objects.filter(stat='rejected').delete()
     lost_items = LostItem.objects.filter(stat='approved')
+    
     return render(request, 'viewitemlost.html', {'lost_items': lost_items})
 
+
 def viewitemfound(request):
-   
+    FoundItem.objects.filter(stat='rejected').delete()
     found_items = FoundItem.objects.filter(stat='approved')
     return render(request, 'viewitemfound.html', {'found_items':found_items})
 
