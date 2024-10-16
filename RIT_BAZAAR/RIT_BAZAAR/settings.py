@@ -143,3 +143,7 @@ EMAIL_PORT=587
 EMAIL_HOST_USER='rigmaumesh34@gmail.com'
 EMAIL_HOST_PASSWORD='iicc vbqd oyen krfz'
 DEFAULT_FROM_EMAIL = 'rigmaumesh34@gmail.com'
+
+
+RAZORPAY_KEY_ID = 'rzp_test_edrzdb8Gbx5U5M'
+RAZORPAY_KEY_SECRET = 'XgwjnFvJQNG6cS7Q13aHKDJj'

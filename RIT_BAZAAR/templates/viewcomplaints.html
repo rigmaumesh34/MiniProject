@@ -92,8 +92,9 @@
             {% for complaint in complaints %}
                 <div class="complaint">
                     <h3>Complaint by {{ complaint.student.username }} ({{ complaint.student.email }})</h3>
+                   
 
-                    <!-- Complaint Type -->
+                  
                     <div class="complaint-type 
                         {% if complaint.complaint_type == 'LF' %}lf{% elif complaint.complaint_type == 'BS' %}bs{% endif %}">
                         {% if complaint.complaint_type == 'LF' %}

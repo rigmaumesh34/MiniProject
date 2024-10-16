@@ -1,3 +1,4 @@
+import razorpay
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate, logout
@@ -17,6 +18,8 @@ from .models import Profile
 import uuid
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Item
+from django.conf import settings
+
 
 def index(request):
     return render(request, 'index.html')
@@ -79,6 +82,7 @@ def studenthome(request):
     
     return render(request, 'studenthome.html', {'student': student})
 
+
 def additem(request):
     if request.method == 'POST':
         item_name = request.POST.get('name')
@@ -87,7 +91,9 @@ def additem(request):
         quantity = request.POST.get('quantity')
         category = request.POST.get('category')
         student = Student.objects.get(user=request.user)
+        st=User.objects.get(id=request.user.id)
         item_image = request.FILES.get('itemimage')
+        
 
         
         if not item_name or not description or not price or not quantity or not category or not item_image:
@@ -104,7 +110,8 @@ def additem(request):
                 quantity=quantity,
                 category=category,
                 image=item_image,
-                delete_status='LIVE'
+                delete_status='LIVE',
+                u=st
             )
             item.save()
             return render(request, 'additem.html', {'message': 'submitted item details to admin !'})
@@ -119,10 +126,6 @@ def additem(request):
 
 
 
-def buyitem(request):
-    
-    items = Item.objects.filter(delete_status='LIVE',status='approved')
-    return render(request, 'buyitem.html', {'items': items})
 
 def viewitemlost(request):
     LostItem.objects.filter(stat='rejected').delete()
@@ -531,7 +534,7 @@ def send_item_notification(item, status):
     """
     subject = f"Your item '{item.name}' has been {status}!"
     message = f"Dear {item.student.name},\n\n" \
-              f"Your item '{item.name}' has been {status} by the admin.\n" \
+              f"Your item '{item.name}' has been {status} by the admin.(please note :reasons for item rejection\n1.prize is high\n2.Poor quality \n3.item not suitable for selling\n" \
               f"Thank you for using our platform."
     from_email = settings.EMAIL_HOST_USER
     recipient_list = [item.student.email] 
@@ -781,3 +784,199 @@ def admin_addevent(request):
 #     else:
 #         # Invalid checksum
 #         return HttpResponse("Checksum verification failed")
+
+
+
+def payment(request, item_id):
+    # Get the item being purchased
+    item = get_object_or_404(Item, id=item_id)
+    
+    razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
+    # Create an order in Razorpay
+    payment_order = razorpay_client.order.create({
+        "amount": int(item.price * 100),  # Razorpay accepts amount in paisa
+        "currency": "INR",
+        "payment_capture": "1"  # Auto capture payment after success
+    })
+
+    context = {
+        'item': item,
+        'payment_order': payment_order
+    }
+
+    return render(request, 'payment.html', context)
+
+
+
+
+def initiate_payment(request, item_id):
+    razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
+    item = Item.objects.get(id=item_id)
+    amount = float(item.price * 100)  # Amount in paisa (Razorpay expects it in paisa)
+
+    # Create an order in Razorpay
+    payment_order = razorpay_client.order.create({
+        'amount': amount,
+        'currency': 'INR',
+        'payment_capture': '1'
+    })
+
+    context = {
+        'item': item,
+        'payment_order': payment_order
+    }
+    return render(request, 'payment.html', context)
+
+@csrf_exempt
+def complete_payment(request,item_id):
+    razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
+    if request.method == "POST":
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_order_id = request.POST.get('razorpay_order_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+
+        # Validate the payment signature (optional but recommended)
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+
+        try:
+            
+            # Verify the payment signature
+            result = razorpay_client.utility.verify_payment_signature(params_dict)
+            # If successful, mark the item as paid
+            item = Item.objects.get(id=item_id)
+            item.paid='PAID'
+            item.save()
+            payment=Payment(item=item,payment_status='success',transaction_id=razorpay_payment_id,buyer_user=request.user)
+            payment.save()
+            
+       
+          
+
+            # Optionally, send confirmation email to the user
+            send_mail(
+                subject='Payment Successful',
+                message=f'Your payment for the item "{item.name}" has been successful.',
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[item.student.email],
+                fail_silently=False,
+            )
+
+            
+            messages.success(request, 'Order confirmed! Please contact the seller for exchange of the item!')
+            return redirect('payment', item_id)
+            
+        except razorpay.errors.SignatureVerificationError as e:
+            return HttpResponse(f"Payment failed: {str(e)}")
+    return HttpResponse("Invalid request", status=400)
+
+def buyitem(request):
+    
+    items = Item.objects.filter(delete_status='LIVE',status='approved',paid='NOT PAID')
+    return render(request, 'buyitem.html', {'items': items})
+
+
+
+
+
+def adminview_transaction(request):
+    payments = Payment.objects.all()
+    return render(request,'adminviewtransaction.html', {'payments': payments})
+
+def student_orderconfirmed(request):
+    
+    if request.user.is_authenticated:
+        s=request.user.id
+        payments = Payment.objects.filter(buyer_user=s)
+        return render(request,'studentvieworderconfirm.html',{'payments': payments})
+    
+    
+def student_order_for_item(request):
+    
+    if request.user.is_authenticated:
+        s=request.user.id
+        payments = Payment.objects.filter(buyer_user=s)
+        return render(request,'studentvieworderconfirm.html',{'payments': payments})
+    
+    
+    
+    
+    
+def paymentsample(request,item_id):
+   
+       item = get_object_or_404(Item, id=item_id)
+       amount=int(item.price)*100
+       razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
+       response_payment= razorpay_client.order.create(dict(amount=amount,currency='INR')) 
+       order_id=response_payment['id']
+       order_status=response_payment['status']
+    #    if order_status=='created':
+    #         item.paid='PAID'
+    #         item.save()
+    #         payment=Payment(item=item,payment_status='success',transaction_id=razorpay_payment_id,buyer_user=request.user)
+    #         payment.save()
+            
+       return render(request,'paymentsample.html')
+   
+def confirmed_order(request):
+  
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        # Get the logged-in user's ID
+        user_id = request.user.id
+        print(user_id)
+        
+        try:
+            # Try to get the Item associated with the user
+            item = Item.objects.get(u=user_id)  # Assuming 'u' is a ForeignKey to the User model
+            print(item)
+            
+            # Get the related payments for the found item
+            payments = Payment.objects.filter(item_id=item.id)
+        
+        except Item.DoesNotExist:
+            # Handle case when no item is found for the user
+            print("No item found for this user.")
+            payments = []  # No payments as no item is found
+        
+        except Exception as e:
+            # Catch any other unexpected errors
+            print(f"An error occurred: {str(e)}")
+            payments = []
+        
+        # Render the 'orders.html' template and pass the payments data
+        return render(request, 'orders.html', {'payments': payments})
+    
+    else:
+        # Redirect to login page or show an error message if user is not authenticated
+        return render(request, 'login.html')
+    
+#     if request.user.is_authenticated:
+#         s=request.user.id
+#         print(s)
+  
+#         item=Item.objects.get(u=s)
+        
+#         print(item)
+    
+    
+    
+    
+#         # students = request.user.student_profile  
+
+#         # print(students.name)
+#         # items = Item.objects.filter(student=students, delete_status='LIVE')
+#         # print(items)
+#         payments=Payment.objects.filter(item_id=item.id)
+        
+        
+#         return render(request,'orders.html',{'payments': payments})
+        
+   
+   
+   
+   
+   

@@ -15,6 +15,7 @@
     <header>
         <nav>
             <ul>
+                <li><a href="{% url 'studentvieworderconfirm' %}">Your Orders</a></li>
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
@@ -46,9 +47,9 @@
                     Phone: {{ item.student.phone }}
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <form action="{% url 'paymentdummy'  %}" method="POST">
+                    <form action="{% url 'payment' item.id %}" method="POST">
                         {% csrf_token %}
-                        <button id="rzp-button" class="btn btn-primary">Pay ₹{{ item.price }}</button>
+                        <button id="button" class="btn btn-primary">Pay ₹{{ item.price }}</button>
                     </form>
                 </div>
                 

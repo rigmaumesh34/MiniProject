@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Policy Confirmation</title>
+    <style>
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .checkbox-container {
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Before you proceed</h2>
+    <p>Please confirm that you agree to the 2-day refund policy for the item.</p>
+    
+    <div class="checkbox-container">
+        <label>
+            <input type="checkbox" id="refundCheckbox">
+            I agree to the 2-day refund policy.
+        </label>
+    </div>
+
+    <button id="proceedButton" disabled>Proceed to Payment</button>
+</div>
+
+<script>
+    const refundCheckbox = document.getElementById('refundCheckbox');
+    const proceedButton = document.getElementById('proceedButton');
+
+    refundCheckbox.addEventListener('change', function() {
+        proceedButton.disabled = !this.checked;
+    });
+</script>
+
+</body>
+</html>

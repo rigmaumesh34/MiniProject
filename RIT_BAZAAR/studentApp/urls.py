@@ -65,6 +65,13 @@ urlpatterns = [
     path('paymentdummy', views.paymentdummy, name='paymentdummy'),
     path('mangeitemlost_admin', views.manageitemlost_admin, name='mangeitemlost_admin'),
     path('manageitemfound_admin', views.manageitemfound_admin, name='manageitemfound_admin'),
+    path('adminviewtransaction', views.adminview_transaction, name='adminviewtransaction'),
+    path('initiate_payment/<int:item_id>/', views.initiate_payment, name='initiate_payment'),
+    path('complete_payment//<int:item_id>/', views.complete_payment, name='complete_payment'),
+    path('payment/<int:item_id>/', views.payment, name='payment'),
+    path('studentvieworderconfirm', views.student_orderconfirmed, name='studentvieworderconfirm'),
+    path('paymentsample/<int:item_id>/', views.paymentsample, name='paymentsample'),
+    path('orders', views.confirmed_order, name='orders'),
     # path('payment/initiate/<int:item_id>/', views.initiate_payment, name='initiate_payment'),
     # path('payment/handle-payment/', views.handle_payment, name='handle_payment'),
     

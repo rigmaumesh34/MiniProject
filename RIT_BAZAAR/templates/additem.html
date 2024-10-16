@@ -15,6 +15,7 @@
             <ul>
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
                 <li><a href="{% url 'manageitem' %}">Manage Item</a></li>
+                <li><a href="{% url 'orders' %}">Confirmed orders</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
         </nav>
@@ -38,12 +39,12 @@
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Enter item description" rows="4" required></textarea>
+                <textarea id="description" name="description" placeholder="Enter item description must specify how old the item is." rows="4" required></textarea>
             </div>
 
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" id="price" name="price" placeholder="Enter price" required>
+                <input type="number" id="price" name="price" placeholder="prize must be minimal or else item may be rejected by admin" required>
             </div>
 
             <div class="form-group">
@@ -66,9 +67,14 @@
                 <label for="itemimage">Upload Image</label>
                 <input type="file" id="itemimage" name="itemimage" required>
             </div>
-
-            <button type="submit">Submit Item</button>
-        </form>
+            <input type="checkbox" id="checkbox" required>
+            <label for="checkbox" >Agree to refund within 2 days if item fails within 2 days of exchange</label>
+            <br>
+           <!--<span id="error-message" style=color:red;>please Agree to refund policy!</span>--> 
+            <button type="submit" id="button" >Submit Item</button>
     </div>
+
+        </form>
+  
 </body>
 </html>

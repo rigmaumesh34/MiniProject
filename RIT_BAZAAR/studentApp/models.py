@@ -35,7 +35,8 @@ class Item(models.Model):
     delete_status=models.CharField(choices=DELETE_CHOICES,default='LIVE')
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     category = models.CharField(max_length=20, default='', blank=False)
-    paid=models.BooleanField(default=False)
+    paid=models.CharField(max_length=20, default='NOT PAID', blank=False)
+    u=models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -151,12 +152,13 @@ class Admin(models.Model):
     user=models.OneToOneField(User,related_name='admin_profile',on_delete=models.CASCADE)
     
 class Payment(models.Model):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-   
+    item=models.ForeignKey(Item, on_delete=models.CASCADE)
+    
+    
     payment_status = models.CharField(max_length=20, default='pending')
     transaction_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    buyer_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     def __str__(self):
         return f'Payment {self.id} - {self.amount} {self.currency}'
