@@ -810,12 +810,13 @@ def payment(request, item_id):
 
 
 def initiate_payment(request, item_id):
+    
     razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
     item = Item.objects.get(id=item_id)
     amount = float(item.price * 100)  # Amount in paisa (Razorpay expects it in paisa)
 
     # Create an order in Razorpay
-    payment_order = razorpay_client.order.create({
+    payment = razorpay_client.order.create({
         'amount': amount,
         'currency': 'INR',
         'payment_capture': '1'
@@ -823,9 +824,9 @@ def initiate_payment(request, item_id):
 
     context = {
         'item': item,
-        'payment_order': payment_order
+        'payment_order': payment
     }
-    return render(request, 'payment.html', context)
+    return render(request, 'payment.html', {'payment':payment})
 
 @csrf_exempt
 def complete_payment(request,item_id):
@@ -856,7 +857,7 @@ def complete_payment(request,item_id):
        
           
 
-            # Optionally, send confirmation email to the user
+            #
             send_mail(
                 subject='Payment Successful',
                 message=f'Your payment for the item "{item.name}" has been successful.',
@@ -880,11 +881,25 @@ def buyitem(request):
 
 
 
-
-
 def adminview_transaction(request):
-    payments = Payment.objects.all()
-    return render(request,'adminviewtransaction.html', {'payments': payments})
+    # Get the search term from the GET request, default to an empty string if not provided
+    search_query = request.GET.get('search', '')
+    print(search_query)
+    # Filter the payments based on the search query if provided
+    if search_query:
+        # Assuming 'name' is the field you want to search by
+        payments = Payment.objects.filter(transaction_id__icontains=search_query)
+    else:
+        # If no search query is provided, retrieve all payments
+        payments = Payment.objects.all()
+
+    # Render the page with the payments and include the search query in the context
+    return render(request, 'adminviewtransaction.html', {'payments': payments, 'search_query': search_query})
+
+
+# def adminview_transaction(request):
+#     payments = Payment.objects.all()
+#     return render(request,'adminviewtransaction.html', {'payments': payments})
 
 def student_orderconfirmed(request):
     
@@ -905,22 +920,7 @@ def student_order_for_item(request):
     
     
     
-def paymentsample(request,item_id):
-   
-       item = get_object_or_404(Item, id=item_id)
-       amount=int(item.price)*100
-       razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
-       response_payment= razorpay_client.order.create(dict(amount=amount,currency='INR')) 
-       order_id=response_payment['id']
-       order_status=response_payment['status']
-    #    if order_status=='created':
-    #         item.paid='PAID'
-    #         item.save()
-    #         payment=Payment(item=item,payment_status='success',transaction_id=razorpay_payment_id,buyer_user=request.user)
-    #         payment.save()
-            
-       return render(request,'paymentsample.html')
-   
+
 def confirmed_order(request):
   
     # Check if the user is authenticated
@@ -977,6 +977,14 @@ def confirmed_order(request):
         
    
    
+def admin_view_students(request):
+    students = Student.objects.all()
+    return render(request, 'adminviewstudents.html', {'students': students})
    
-   
-   
+def deletedtudent(request,student_id):
+    st = Student.objects.filter(id=student_id)
+    st.delete()
+    return redirect('adminviewstudents')
+
+
+    

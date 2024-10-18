@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <h3>Hello  {{ username }} Welcome to RIT BAZAR</h3>
+        <h2>Hello  {{ request.user.username }} Welcome to RIT BAZAAR</h2>
         <nav>
             <ul>
                 <li><a href="{% url 'events' %}">View events</a></li>

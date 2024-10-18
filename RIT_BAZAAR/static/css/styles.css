@@ -1,0 +1,56 @@
+/* Full-page background */
+body {
+   
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Styling the form */
+form {
+    background-color: rgba(255, 255, 255, 0.8); /* Transparent white background for the form */
+    padding: 20px;
+    margin: 100px auto;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Input fields and button styling */
+input[type="text"], input[type="password"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    background-color: green;
+    color: white;
+    padding: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Hover effect for the button */
+button:hover {
+    background-color: darkgreen;
+}
+
+/* Styling the Back link */
+a {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: green;
+    font-weight: bold;
+}
+
+a:hover {
+    color: darkgreen;
+}

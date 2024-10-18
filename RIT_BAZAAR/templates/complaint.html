@@ -60,15 +60,8 @@
 <body>
     
 
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <form method="post" enctype="multipart/form-data">
+    
+    <form method="post" enctype="multipart/form-data" id="complaintform">
         {% csrf_token %}
         
         <label for="complaint_type">Type of Complaint:</label>
@@ -83,7 +76,26 @@
         <label for="image">Upload Image (optional):</label>
         <input type="file" id="image" name="image"><br><br>
 
-        <button type="submit">Submit Complaint</button>
+        <button type="submit" id="bt">Submit Complaint</button>
+        <h3 style="color:#4CAF50">
+            Please note : For complaints regading buy and sell provide transaction id in description
+        </h3>
+
+
+
+
+
+
     </form>
+    <script>
+        document.getElementById('bt').onsubmit = function() {
+            // Check for messages
+            {% if messages %}
+                {% for message in messages %}
+                    alert("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        };
+    </script>
 </body>
 </html>

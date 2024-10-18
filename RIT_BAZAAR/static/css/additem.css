@@ -46,10 +46,10 @@ nav ul li a:hover {
 
 .register-container {
     background-color: #ffffff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 100%;
     margin: 100px auto 0; /* Adjusted margin to push the content below the fixed header */
 }
 

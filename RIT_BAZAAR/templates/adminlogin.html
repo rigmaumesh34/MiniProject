@@ -1,11 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-    <a href="{% url 'index' %}">Back</a>
+    <a style = "text-align: left;" href="{% url 'index' %}">Back</a>
 <head>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Login</title>
 </head>
 <body>
-    <h2>Login</h2>
+    <h2 style="text-align:center;color:green">Login</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}

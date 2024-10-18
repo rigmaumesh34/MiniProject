@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'studentApp',
+    'crispy_forms',
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.ModelBackend']
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -14,7 +14,7 @@ class Student(models.Model):
     yearofstudy = models.CharField(max_length=50) 
     
     def __str__(self):
-        return f"{self.name} ({self.department}, Year {self.yearofstudy})"
+        return f"{self.name} ({self.department}, Year {self.yearofstudy},{self.phone})"
     
 
     
@@ -44,7 +44,7 @@ class Item(models.Model):
     )
     
     def __str__(self):
-        return f"{self.name} ({self.price}, {self.description})"
+        return f"{self.name} ({self.price}, {self.description},{self.student})"
     
     
 
@@ -69,7 +69,7 @@ class LostItem(models.Model):
         default='pending',
     ) 
     def __str__(self):
-        return f"{self.name}  ({self.status}  {self.description}  {self.student})"
+        return f"{self.name}  ({self.lost_date} , {self.lost_time} , {self.lost_location}, {self.student})"
     
 
 
@@ -94,7 +94,7 @@ class FoundItem(models.Model):
         default='pending',
     )
     def __str__(self):
-        return f"{self.name} ({self.description} , {self.found_location})"
+        return f"{self.name} ({self.description} , {self.student},)"
 
 
     
@@ -161,4 +161,4 @@ class Payment(models.Model):
     buyer_user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f'Payment {self.id} - {self.amount} {self.currency}'
+        return f'Payment {self.item} - {self.transaction_id} {self.buyer_user}'

@@ -7,4 +7,5 @@ admin.site.register(Complaints)
 admin.site.register(Events)
 admin.site.register(LostItem)
 admin.site.register(FoundItem)
+admin.site.register(Payment)
 # Register your models here.

@@ -33,7 +33,12 @@
     </header>
 </head>
 <body>
-
+    <br>
+    <br>
+    <form method="GET" action="">
+        <input type="text" name="search" placeholder="Search by name" value="{{ request.GET.search }}">
+        <button type="submit">Search</button>
+    </form>
 <h2>Transactions</h2>
 
 <table>
@@ -41,6 +46,7 @@
         <tr>
             <th>ID</th>
             <th>Item</th>
+            <th>Amount</th>
             <th>Buyer</th>
             <th>Seller</th>
             <th>Transaction ID</th>
@@ -51,7 +57,8 @@
         {% for payment in payments %}
         <tr>
             <td>{{ payment.id }}</td>
-            <td>{{ payment.item.name }}</td> 
+            <td>{{ payment.item.name }}</td>
+            <td>{{ payment.item.price }}</td> 
             <td>
                 <ul>
                     <li>{{ payment.buyer_user.username }}</li>
