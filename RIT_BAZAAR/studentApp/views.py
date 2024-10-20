@@ -19,7 +19,7 @@ import uuid
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Item
 from django.conf import settings
-
+from datetime import date
 
 def index(request):
     return render(request, 'index.html')
@@ -1004,7 +1004,8 @@ def refundrequestview(request):
         payment = get_object_or_404(Payment, transaction_id=p)
         payment.refund_description = description
         payment.refund_image = image  
-        payment.refund_status = 'True' 
+        payment.refund_status = 'True'
+        payment.refund_date= date.today().strftime('%Y-%m-%d')
         payment.save()
         
         message= 'Your refund request has been submitted successfully.'
@@ -1030,26 +1031,16 @@ def refund_complete_payment(request,item_id):
 
         try:
             
-            # Verify the payment signature
+        
             result = razorpay_client.utility.verify_payment_signature(params_dict)
-            # If successful, mark the item as paid
-
             
-
- 
-
-            
+         
             messages.success(request, 'refund payment successful!')
             return redirect('refundpayment', item_id)
             
         except razorpay.errors.SignatureVerificationError as e:
             return HttpResponse(f"Payment failed: {str(e)}")
     return HttpResponse("Invalid request", status=400)
-
-
-
-
-
 
 
 
@@ -1072,7 +1063,7 @@ def viewrefund(request):
 
             
                 for item in items:
-                    item_payments = Payment.objects.filter(item_id=item.id,refund_status='true')
+                    item_payments = Payment.objects.filter(item_id=item.id,refund_status='True')
                     payments.extend(item_payments) 
         
                 print(payments)  

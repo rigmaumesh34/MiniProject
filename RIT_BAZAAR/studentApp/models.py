@@ -162,6 +162,7 @@ class Payment(models.Model):
     refund_status=models.CharField(max_length=10,default='False')
     refund_description=models.TextField(default='n')
     refund_image=models.ImageField(upload_to='refund/', default='items/book.jpg')
+    refund_date=models.CharField(max_length=10)
     
     
     def __str__(self):

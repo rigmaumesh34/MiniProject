@@ -5,20 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payments</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+         /* table.css */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px 15px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+td ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+td ul li {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin: 20px 0;
+}
+
+table {
+    margin: 20px auto;
+    width: 90%;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    text-align: left;
+}
+
+thead {
+    border-bottom: 2px solid #4CAF50;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        font-size: 16px;
+    }
+
+    nav ul li {
+        float: none;
+        width: 100%;
+    }
+}
+
     </style>
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <header>
@@ -45,7 +115,7 @@
             <th>Buyer</th>
             <th>reason for refund</th>
             <th>Image proof</th>
-            <th>Date and Time of refund request</th>
+            <th>Date of refund request</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -72,7 +142,7 @@
                     No image
                 {% endif %}
             </td>
-            <td></td>
+            <td>{{ payment.refund_date }}</td>
             <td>
                 <form action="{% url 'refundpayment' payment.item.id %}" method="POST">
                     {% csrf_token %}
