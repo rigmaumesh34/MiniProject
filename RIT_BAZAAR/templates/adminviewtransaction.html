@@ -4,22 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payments</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+   
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <header>
         <nav>
@@ -31,12 +17,60 @@
             </ul>
         </nav>
     </header>
+    <style>
+        /* General styling for the form */
+        form {
+            
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+    
+        /* Styling for the search input field */
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #4CAF50; /* Green border */
+            border-radius: 5px 0 0 5px; /* Rounded left edge */
+            outline: none; /* Remove default outline on focus */
+        }
+    
+        input[type="text"]::placeholder {
+            color: #aaa; /* Light gray placeholder text */
+        }
+    
+        input[type="text"]:focus {
+            border-color: #45a049; /* Slightly darker green when focused */
+        }
+    
+        /* Styling for the search button */
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #4CAF50;
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            cursor: pointer;
+            border-radius: 0 5px 5px 0; /* Rounded right edge */
+            transition: background-color 0.3s ease; /* Smooth background change */
+        }
+    
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    
+        button[type="submit"]:focus {
+            outline: none; /* Remove focus outline */
+        }
+    </style>
 </head>
 <body>
+    
     <br>
     <br>
     <form method="GET" action="">
-        <input type="text" name="search" placeholder="Search by name" value="{{ request.GET.search }}">
+        <input type="text" name="search" placeholder="Search by transaction_id" value="{{ request.GET.search }}">
         <button type="submit">Search</button>
     </form>
 <h2>Transactions</h2>
@@ -44,7 +78,7 @@
 <table>
     <thead>
         <tr>
-            <th>ID</th>
+            
             <th>Item</th>
             <th>Amount</th>
             <th>Buyer</th>
@@ -56,7 +90,7 @@
     <tbody>
         {% for payment in payments %}
         <tr>
-            <td>{{ payment.id }}</td>
+          
             <td>{{ payment.item.name }}</td>
             <td>{{ payment.item.price }}</td> 
             <td>

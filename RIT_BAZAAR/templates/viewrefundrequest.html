@@ -24,9 +24,9 @@
 <header>
         <nav>
             <ul>
+                <li><a href="{% url 'orders' %}">Back</a></li>
                 <li><a href="{% url 'studenthome' %}"> Home</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
-                <li><a href="{% url 'viewrefundrequest' %}">View Refund requests</a></li>
                 
                 
             </ul>
@@ -43,9 +43,10 @@
             
             <th>Item</th>
             <th>Buyer</th>
-     
-            <th>Transaction ID</th>
-            <th>Date and Time of Transaction</th>
+            <th>reason for refund</th>
+            <th>Image proof</th>
+            <th>Date and Time of refund request</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -63,8 +64,26 @@
             </td>
    
            
-            <td>{{ payment.transaction_id }}</td>
-            <td>{{ payment.created_at }}</td>
+            <td>{{ payment.refund_description }}</td>
+            <td>
+                {% if payment.refund_image %}
+                    <img src="{{ payment.refund_image.url }}" alt="" width="100">
+                {% else %}
+                    No image
+                {% endif %}
+            </td>
+            <td></td>
+            <td>
+                <form action="{% url 'refundpayment' payment.item.id %}" method="POST">
+                    {% csrf_token %}
+                    <button id="button" class="btn btn-primary" style ="background-color: rgb(0, 200, 0); border-radius: 10px; padding: 10px 20px;" type="submit" class="approve-button">Pay ₹{{ payment.item.price }}</button>
+                </form>
+            </td>
+
+
+
+
+
         </tr>
         {% empty %}
         <tr>

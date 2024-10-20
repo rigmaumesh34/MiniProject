@@ -14,9 +14,8 @@
         <h2>Payment for {{ item.name }}</h2>
         <nav>
             <ul>
-                <li><a href="{% url 'buyitem' %}">Back</a></li>
+                
                 <li><a href="{% url 'studenthome' %}">Home</a></li>
-
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 
             </ul>
@@ -32,16 +31,14 @@
 
     <form name='paymentform'>
         <div style="text-align:center">
-            <input type="checkbox" id="checkbox" unchecked>
-            <label for="checkbox">Agree to terms:refund should  be collected within 2 days of transaction if item did not meet expectation.</label>
-            <p>Price: ₹{{ item.price }}</p>
 
-            <button  id="rzp-button" disabled>Pay with Razorpay</button>
+
+            <button  id="rzp-button" >Pay with Razorpay</button>
         </div>
     </form>
 
 
-    <form id="payment-form" action="{% url 'complete_payment' item.id %}" method="POST">
+    <form id="payment-form" action="{% url 'refund_complete_payment' item.id %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">

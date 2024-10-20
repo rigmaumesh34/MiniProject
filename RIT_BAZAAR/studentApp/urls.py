@@ -73,6 +73,10 @@ urlpatterns = [
     path('studentvieworderconfirm', views.student_orderconfirmed, name='studentvieworderconfirm'),
     path('adminviewstudents', views.admin_view_students, name='adminviewstudents'),
     path('orders', views.confirmed_order, name='orders'),
+    path('refudrequest', views.refundrequestview, name='refudrequest'),
+    path('viewrefundrequest',views.viewrefund,name='viewrefundrequest'),
+    path('refundpayment/<int:item_id>/',views.refundpayment,name='refundpayment'),
+    path('refund_complete_payment/<int:item_id>/',views.refund_complete_payment,name='refund_complete_payment'),
     # path('payment/initiate/<int:item_id>/', views.initiate_payment, name='initiate_payment'),
     # path('payment/handle-payment/', views.handle_payment, name='handle_payment'),
     

@@ -91,7 +91,7 @@ class FoundItem(models.Model):
     stat = models.CharField(
         max_length=10,
         choices=STAT_CHOICES,
-        default='pending',
+        default='pending'
     )
     def __str__(self):
         return f"{self.name} ({self.description} , {self.student},)"
@@ -159,6 +159,13 @@ class Payment(models.Model):
     transaction_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     buyer_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    refund_status=models.CharField(max_length=10,default='False')
+    refund_description=models.TextField(default='n')
+    refund_image=models.ImageField(upload_to='refund/', default='items/book.jpg')
+    
     
     def __str__(self):
         return f'Payment {self.item} - {self.transaction_id} {self.buyer_user}'
+    
+
+    

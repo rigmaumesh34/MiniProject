@@ -1,0 +1,59 @@
+/* Center the form container in the middle of the page */
+form[name="paymentform"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+form[name="paymentform"] div {
+    background-color: #f9f9f9; /* Light background for the form */
+    padding: 40px; /* Add padding around the content */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+    text-align: center; /* Center the content inside the form */
+    width: 400px; /* Set a fixed width for the form container */
+}
+
+/* Style the checkbox label */
+form[name="paymentform"] label {
+    display: block; /* Block-level label for better spacing */
+    margin-bottom: 20px; /* Add space below the label */
+    font-family: 'Arial', sans-serif; /* Font style */
+    color: #333; /* Darker text color */
+    font-size: 16px; /* Font size */
+}
+
+/* Style for price text */
+form[name="paymentform"] p {
+    font-size: 18px; /* Larger text for the price */
+    font-weight: bold; /* Make price bold */
+    margin: 20px 0; /* Add margin around the price */
+}
+
+/* Style the Razorpay button */
+form[name="paymentform"] button {
+    background-color: #4CAF50; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 12px 20px; /* Button padding */
+    font-size: 16px; /* Font size */
+    cursor: not-allowed; /* Default cursor when disabled */
+    transition: background-color 0.3s ease, cursor 0.3s ease; /* Smooth transition */
+}
+
+form[name="paymentform"] button:enabled {
+    cursor: pointer; /* Change cursor when enabled */
+}
+
+form[name="paymentform"] button:hover:enabled {
+    background-color: #45a049; /* Darker green on hover when enabled */
+}
+
+/* Ensure the form is responsive on smaller screens */
+@media (max-width: 768px) {
+    form[name="paymentform"] div {
+        width: 100%; /* Make the form container responsive */
+    }
+}

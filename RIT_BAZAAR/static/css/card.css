@@ -1,0 +1,101 @@
+/* Card container to display items in a responsive grid */
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to new rows */
+    gap: 20px; /* Spacing between cards */
+    padding: 20px;
+    justify-content: space-around; /* Distribute cards evenly */
+}
+
+/* Styling for individual cards */
+.card {
+    background-color: #f5f1cf; /* Light yellow background */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for a card effect */
+    overflow: hidden;
+    width: 50%; /* Full width by default */
+    max-width: 400px; /* Set maximum width for the card */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: rgb(50, 50, 50); /* Slightly darker text color */
+    transition: transform 0.3s ease; /* Smooth scale on hover */
+    height: auto; /* Allow content-based height */
+}
+
+.card:hover {
+    transform: scale(1.03); /* Slightly scale the card on hover */
+}
+
+/* Styling for card images */
+.card-image img {
+    width: 100%; /* Full width image */
+    max-width: 300px; /* Restrict the image to a smaller width */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain; /* Ensure the entire image is displayed inside the container */
+    margin: 0 auto; /* Center the image */
+    display: block; /* Ensure block-level behavior for centering */
+    border-bottom: 1px solid #ddd; /* Border below the image */
+}
+
+.no-image {
+    width: 100%;
+    height: 150px; /* Placeholder height */
+    background-color: #e0e0e0; /* Light gray background for no-image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #555;
+    font-size: 18px;
+}
+
+/* Card content */
+.card-content {
+    padding: 20px; /* Slightly more padding */
+    text-align: left;
+}
+
+/* Card title (item name) */
+.card-content h3 {
+    margin-top: 0;
+    color: #020107;
+    font-size: 32px; /* Increase font size */
+    text-align: center;
+}
+
+/* Additional card details */
+.card-content p {
+    color: #020107;
+    margin: 10px 0; /* Increase margin slightly */
+    font-size: 20px; /* Larger font size */
+}
+
+/* Contact information styling */
+.contact-info {
+    margin-top: 15px; /* Increase top margin */
+    font-size: 20px; /* Increase font size */
+    color: #020107;
+}
+
+/* Styling the button inside the card */
+.card-content button {
+    display: inline-block;
+    background-color: #4CAF50; /* Button background color */
+    color: white; /* Button text color */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px; /* Slightly larger padding */
+    font-size: 16px; /* Larger font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card-content button:hover {
+    background-color: #48a34d; /* Darker green on hover */
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .card-container {
+        flex-direction: column; /* Stack cards on smaller screens */
+    }
+}

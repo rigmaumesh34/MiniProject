@@ -7,7 +7,7 @@
     <title>Items lost</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
 </head>
 <body>
@@ -52,11 +52,11 @@
                 <td>
                         <form method="POST" action="{% url 'approve_item_found' item.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="approve-button">Approve</button>
+                            <button type="submit"  style ="background-color: rgb(144, 200, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="approve-button" class="approve-button">Approve</button>
                         </form>
                         <form method="POST" action="{% url 'reject_item_found' item.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="reject-button">Reject</button>
+                            <button type="submit" style ="background-color: rgb(268, 144, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="reject-button" class="reject-button">Reject</button>
                         </form>
                     </td> 
                 </tr>

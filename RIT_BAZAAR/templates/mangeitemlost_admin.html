@@ -7,6 +7,7 @@
     <title>Items lost</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
 
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
 </head>
@@ -26,7 +27,7 @@
     <h2 style="text-align: center; color: green;">Items Reported Lost</h2>
 
     <div class="table-container" style="text-align: center;">
-        <table border="1" cellpadding="10" cellspacing="0" style="margin: 0 auto; width: 90%;">
+        <table >
             <thead>
                 <tr>
                     <th>Image</th>
@@ -36,7 +37,7 @@
                     <th>Lost time</th>
                     <th>Lost location</th>
                     <th>Student details</th>
-                    <th>Actions</th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,11 +66,13 @@
                 <td>
                         <form method="POST" action="{% url 'approve_item_lost' item.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="approve-button">Approve</button>
+                            <button style ="background-color: rgb(144, 200, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="approve-button">Approve</button>
+                          
                         </form>
+                    </td> <br><td>
                         <form method="POST" action="{% url 'reject_item_lost' item.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="reject-button">Reject</button>
+                            <button style ="background-color: rgb(240, 144, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="reject-button">Reject</button>
                         </form>
                     </td> 
                 </tr>

@@ -7,7 +7,7 @@
     <title>Items for Sale</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
 </head>
 <body>
@@ -29,7 +29,7 @@
     <h2 style="text-align: center; color: green;">Items Available for Sale</h2>
 
     <div class="table-container" style="text-align: center;">
-        <table border="1" cellpadding="10" cellspacing="0" style="margin: 0 auto; width: 90%;">
+        <table cellpadding="10" cellspacing="0" >
             <thead>
                 <tr>
                     <th>Image</th>
@@ -65,11 +65,13 @@
                 <td>
                         <form method="POST" action="{% url 'approve_item' item.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="approve-button">Approve</button>
+                            <button style ="background-color: rgb(144, 200, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="approve-button">Approve</button>
+                            
                         </form>
+                        <br><br>
                         <form method="POST" action="{% url 'reject_item' item.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="reject-button">Reject</button>
+                            <button style ="background-color: rgb(268, 144, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="reject-button">Reject</button>
                         </form>
                     </td> 
                 </tr>

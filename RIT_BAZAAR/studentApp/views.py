@@ -196,12 +196,12 @@ def reportitemfound(request):
                 description=description,
                
                 student=student,
-                status='not_found'
+                stat='pending'
             )
             found_item.save()
 
            
-            messages.success(request, 'found item reported successfully!')
+            messages.success(request, 'found item reported successfully to Admin!.It will be posted after admin approval.')
 
             return redirect('reportitemfound') 
 
@@ -229,12 +229,12 @@ def reportitemlost(request):
                 lost_time=time_lost,
                 image=item_image,
                 student=student,
-                status='not_found'
+                stat='pending'
             )
             lost_item.save()
 
            
-            messages.success(request, 'Lost item reported successfully!')
+            messages.success(request, 'Lost item reported successfully!to Admin!.It will be posted after admin approval.')
 
             return redirect('reportitemlost')  
 
@@ -808,6 +808,31 @@ def payment(request, item_id):
 
 
 
+def refundpayment(request, item_id):
+    # Get the item being purchased
+    item = get_object_or_404(Item, id=item_id)
+    
+    razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
+    # Create an order in Razorpay
+    payment_order = razorpay_client.order.create({
+        "amount": int(item.price * 100),  # Razorpay accepts amount in paisa
+        "currency": "INR",
+        "payment_capture": "1"  # Auto capture payment after success
+    })
+
+    context = {
+        'item': item,
+        'payment_order': payment_order
+    }
+
+    return render(request, 'refundpayment.html', context)
+
+
+
+
+
+
+
 
 def initiate_payment(request, item_id):
     
@@ -836,7 +861,7 @@ def complete_payment(request,item_id):
         razorpay_order_id = request.POST.get('razorpay_order_id')
         razorpay_signature = request.POST.get('razorpay_signature')
 
-        # Validate the payment signature (optional but recommended)
+        
         params_dict = {
             'razorpay_order_id': razorpay_order_id,
             'razorpay_payment_id': razorpay_payment_id,
@@ -854,10 +879,7 @@ def complete_payment(request,item_id):
             payment=Payment(item=item,payment_status='success',transaction_id=razorpay_payment_id,buyer_user=request.user)
             payment.save()
             
-       
-          
 
-            #
             send_mail(
                 subject='Payment Successful',
                 message=f'Your payment for the item "{item.name}" has been successful.',
@@ -876,8 +898,18 @@ def complete_payment(request,item_id):
 
 def buyitem(request):
     
-    items = Item.objects.filter(delete_status='LIVE',status='approved',paid='NOT PAID')
-    return render(request, 'buyitem.html', {'items': items})
+    search_query = request.GET.get('search', '')
+    print(search_query)
+    
+    if search_query:
+        
+        items = Item.objects.filter(category__icontains=search_query)
+    else:
+        
+        items = Item.objects.filter(delete_status='LIVE',status='approved',paid='NOT PAID')
+
+
+    return render(request, 'buyitem.html', {'items': items,'search_query': search_query})
 
 
 
@@ -885,21 +917,17 @@ def adminview_transaction(request):
     # Get the search term from the GET request, default to an empty string if not provided
     search_query = request.GET.get('search', '')
     print(search_query)
-    # Filter the payments based on the search query if provided
     if search_query:
-        # Assuming 'name' is the field you want to search by
+        
         payments = Payment.objects.filter(transaction_id__icontains=search_query)
     else:
-        # If no search query is provided, retrieve all payments
+        
         payments = Payment.objects.all()
 
-    # Render the page with the payments and include the search query in the context
+    
     return render(request, 'adminviewtransaction.html', {'payments': payments, 'search_query': search_query})
 
 
-# def adminview_transaction(request):
-#     payments = Payment.objects.all()
-#     return render(request,'adminviewtransaction.html', {'payments': payments})
 
 def student_orderconfirmed(request):
     
@@ -917,33 +945,29 @@ def student_order_for_item(request):
         return render(request,'studentvieworderconfirm.html',{'payments': payments})
     
     
-    
-    
-    
-
 def confirmed_order(request):
   
-    # Check if the user is authenticated
+    
     if request.user.is_authenticated:
-        # Get the logged-in user's ID
+        
         user_id = request.user.id
         print(user_id)
         
         try:
-            # Try to get the Item associated with the user
-            item = Item.objects.get(u=user_id)  # Assuming 'u' is a ForeignKey to the User model
-            print(item)
             
-            # Get the related payments for the found item
-            payments = Payment.objects.filter(item_id=item.id)
-        
-        except Item.DoesNotExist:
-            # Handle case when no item is found for the user
-            print("No item found for this user.")
-            payments = []  # No payments as no item is found
-        
+            items = Item.objects.filter(u=user_id)  
+            print(items)
+            
+            
+            payments = []
+            
+            
+            for item in items:
+                item_payments = Payment.objects.filter(item_id=item.id)
+                payments.extend(item_payments)  # Collect all payments for each item
+                
         except Exception as e:
-            # Catch any other unexpected errors
+            # Catch any unexpected errors
             print(f"An error occurred: {str(e)}")
             payments = []
         
@@ -951,30 +975,11 @@ def confirmed_order(request):
         return render(request, 'orders.html', {'payments': payments})
     
     else:
-        # Redirect to login page or show an error message if user is not authenticated
+        # Redirect to login page or show an error message if the user is not authenticated
         return render(request, 'login.html')
-    
-#     if request.user.is_authenticated:
-#         s=request.user.id
-#         print(s)
-  
-#         item=Item.objects.get(u=s)
-        
-#         print(item)
+ 
     
     
-    
-    
-#         # students = request.user.student_profile  
-
-#         # print(students.name)
-#         # items = Item.objects.filter(student=students, delete_status='LIVE')
-#         # print(items)
-#         payments=Payment.objects.filter(item_id=item.id)
-        
-        
-#         return render(request,'orders.html',{'payments': payments})
-        
    
    
 def admin_view_students(request):
@@ -987,4 +992,102 @@ def deletedtudent(request,student_id):
     return redirect('adminviewstudents')
 
 
+
+def refundrequestview(request):
+    if request.method=='POST':
+        
+        description = request.POST.get('description')
+        p=request.POST.get('payid')
+        image = request.FILES.get('image')
+
     
+        payment = get_object_or_404(Payment, transaction_id=p)
+        payment.refund_description = description
+        payment.refund_image = image  
+        payment.refund_status = 'True' 
+        payment.save()
+        
+        message= 'Your refund request has been submitted successfully.'
+
+    
+        return render(request, 'refudrequest.html', {'message': message})
+    return render(request,'refudrequest.html')
+
+
+def refund_complete_payment(request,item_id):
+    razorpay_client = razorpay.Client(auth=("rzp_test_edrzdb8Gbx5U5M","XgwjnFvJQNG6cS7Q13aHKDJj"))
+    if request.method == "POST":
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_order_id = request.POST.get('razorpay_order_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+
+        
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+
+        try:
+            
+            # Verify the payment signature
+            result = razorpay_client.utility.verify_payment_signature(params_dict)
+            # If successful, mark the item as paid
+
+            
+
+ 
+
+            
+            messages.success(request, 'refund payment successful!')
+            return redirect('refundpayment', item_id)
+            
+        except razorpay.errors.SignatureVerificationError as e:
+            return HttpResponse(f"Payment failed: {str(e)}")
+    return HttpResponse("Invalid request", status=400)
+
+
+
+
+
+
+
+
+
+
+
+def viewrefund(request):
+        if request.user.is_authenticated:
+        
+            user_id = request.user.id
+            print(user_id)
+            
+            try:
+            
+                items = Item.objects.filter(u=user_id)  
+                print(items)
+            
+            
+                payments = []
+
+            
+                for item in items:
+                    item_payments = Payment.objects.filter(item_id=item.id,refund_status='true')
+                    payments.extend(item_payments) 
+        
+                print(payments)  
+            except Exception as e:
+           
+                print(f"An error occurred: {str(e)}")
+                payments = []
+        
+        
+            return render(request, 'viewrefundrequest.html', {'payments': payments})
+    
+        else:
+    
+            return render(request, 'login.html')
+    
+        
+
+

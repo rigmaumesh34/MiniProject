@@ -67,7 +67,7 @@
             <td>
                     <form action="{% url 'deletedtudent' student.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit">Delete</button>
+                        <button type="submit" style ="background-color: rgb(240, 144, 144); border-radius: 10px; padding: 10px 20px;" type="submit" class="reject-button">Delete</button>
                     </form>
                 
             </td>
